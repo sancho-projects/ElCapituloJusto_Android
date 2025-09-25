@@ -1,6 +1,7 @@
 package es.sanchoo.capitulojusto.results
 
 import android.graphics.Color
+import android.os.Build
 import android.os.Bundle
 import android.view.Gravity
 import android.view.LayoutInflater
@@ -8,6 +9,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.TextView
+import androidx.annotation.RequiresApi
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import es.sanchoo.capitulojusto.Constants
@@ -26,6 +28,7 @@ class registerFragment : Fragment() {
 
 
 
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -43,6 +46,7 @@ class registerFragment : Fragment() {
                 setTextColor(Color.BLACK)
                 gravity = Gravity.CENTER
                 setPadding(0, 16, 0, 8) // margen superior e inferior
+                typeface = resources.getFont(R.font.caslon_antique_bold)
             }
             containerRecords.addView(turnTitle)
 
@@ -89,10 +93,11 @@ class registerFragment : Fragment() {
                     text = getString(R.string.end_register_player_scored, player.name, score)
                     textSize = 16f
                     if (score == minScore) {
-                        setTextColor(Color.RED)
-                        setTypeface(null, android.graphics.Typeface.BOLD)
+                        setTextColor(Color.WHITE)
+                        typeface = resources.getFont(R.font.caslon_antique_bold)
                     } else {
                         setTextColor(Color.BLACK)
+                        typeface = resources.getFont(R.font.caslon_antique_regular)
                     }
                 }
                 registerLayout.addView(playerText)

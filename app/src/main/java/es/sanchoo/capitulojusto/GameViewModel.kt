@@ -1,6 +1,5 @@
 package es.sanchoo.capitulojusto
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -21,6 +20,7 @@ enum class State {
     GUESSING, CHECKING
 }
 
+const val CORRECT_ANSWER = -10
 
 class GameViewModel: ViewModel() {
     // aquí incluiremos las funciones y variables que afectan a la lógica del programa
@@ -29,7 +29,7 @@ class GameViewModel: ViewModel() {
 
     var currentPanel: Panel? = null
     var panels: MutableList<Panel> = mutableListOf()
-
+    private var scores_of_turn = mutableListOf<Int>()
 
     private var conditionsSet: MutableSet<Int> = mutableSetOf()
     private var limitChapter: Int = MAX_CAP_DEFAULT
@@ -45,7 +45,7 @@ class GameViewModel: ViewModel() {
     fun onNext(chapters: List<Int>): Panel?{
         when(state){
             State.GUESSING -> {
-                showResults(chapters)
+                updateScores(chapters)
                 state = State.CHECKING
                 turn++
                 return null
@@ -136,25 +136,21 @@ class GameViewModel: ViewModel() {
 
     }
 
-    private fun showResults(chapters: List<Int>){
+    private fun updateScores(chapters: List<Int>) {
         val rightChapter = currentPanel!!.rightChapter
-
+        scores_of_turn.clear()
         for (i in 0 until players.size) {
             val player = players[i]
             val guess = chapters[i]
-
-            if (guess == rightChapter) {
-                player.addScore(-10)
-            } else {
-                val difference = abs(guess - rightChapter)
-                player.addScore(difference)
-            }
+            val score = if (guess == rightChapter) CORRECT_ANSWER
+                        else abs(guess - rightChapter)
+            player.addScore(score)
+            scores_of_turn.add(score)
         }
-
-        // TODO? VISTA: FEEDBACK
     }
 
-    fun onGameFinished() {
+
+    private fun onGameFinished() {
         _finishGame.value = true
 //        restart()
     }
@@ -184,5 +180,17 @@ class GameViewModel: ViewModel() {
         val imgPanels = mutableListOf<String>()
         panels.forEach { imgPanels.add(it.image) }
         return imgPanels
+    }
+
+    fun getSoundIndex(): Int {
+        return when {
+            scores_of_turn.any { it == CORRECT_ANSWER } && scores_of_turn.count { it == CORRECT_ANSWER } > 1 -> 0 // Varios jugadores aciertan
+            scores_of_turn.any { it == CORRECT_ANSWER } -> 1
+            scores_of_turn.any { it < 10 } -> 2
+            scores_of_turn.any { it < 50 } -> 3
+            scores_of_turn.any { it > 500 } -> 6
+            scores_of_turn.any { it < 100 } -> 4
+            else -> 5
+        }
     }
 }

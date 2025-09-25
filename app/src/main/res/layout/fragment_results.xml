@@ -28,6 +28,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="1"
+                android:fontFamily="@font/komika"
                 android:textStyle="bold"
                 android:textSize="22sp"
                 android:layout_marginEnd="12dp" />
@@ -38,6 +39,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="Jugador 1"
+                android:fontFamily="@font/komika"
                 android:textStyle="bold"
                 android:textSize="20sp" />
 
@@ -46,6 +48,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="100"
+                android:fontFamily="@font/komika"
                 android:textStyle="bold"
                 android:textSize="20sp" />
         </LinearLayout>
@@ -69,6 +72,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="12dp"
                 android:text="2"
+                android:fontFamily="@font/komika"
                 android:textSize="18sp"
                 android:textStyle="bold" />
 
@@ -78,6 +82,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="Jugador 2"
+                android:fontFamily="@font/komika"
                 android:textSize="18sp" />
 
             <TextView
@@ -85,6 +90,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="90"
+                android:fontFamily="@font/komika"
                 android:textSize="18sp" />
         </LinearLayout>
 
@@ -97,6 +103,7 @@
             android:padding="8dp"
             android:background="@android:color/darker_gray"
             android:gravity="center_vertical"
+            android:fontFamily="@font/komika"
             android:visibility="invisible">
 
             <TextView
@@ -104,6 +111,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="3"
+                android:fontFamily="@font/komika"
                 android:textSize="16sp"
                 android:layout_marginEnd="12dp" />
 
@@ -113,6 +121,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="Jugador 3"
+                android:fontFamily="@font/komika"
                 android:textSize="16sp" />
 
             <TextView
@@ -120,6 +129,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="80"
+                android:fontFamily="@font/komika"
                 android:textSize="16sp" />
         </LinearLayout>
 
@@ -139,6 +149,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="4"
+                android:fontFamily="@font/komika"
                 android:textSize="16sp"
                 android:layout_marginEnd="12dp" />
 
@@ -148,6 +159,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="Jugador 4"
+                android:fontFamily="@font/komika"
                 android:textSize="16sp" />
 
             <TextView
@@ -155,6 +167,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="70"
+                android:fontFamily="@font/komika"
                 android:textSize="16sp" />
         </LinearLayout>
 

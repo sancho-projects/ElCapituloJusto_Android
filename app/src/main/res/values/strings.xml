@@ -11,7 +11,7 @@
     </string>
 
     <string name="reglas_parrafo2">
-Por cada capítulo que te alejes se suma <b>1 punto</b>; y si aciertas <b><font color='#F44336'>se restan 10 puntos</font></b>. Gana quien después de 10 turnos tenga menor puntuación.
+Por cada capítulo que te alejes se suma <b>1 punto</b>; y si aciertas <b><font color='#F44336'>se restan 10 puntos</font></b>. Gana quien después de 5 turnos tenga menor puntuación.
     </string>
 
     <string name="reglas_parrafo4">
@@ -39,11 +39,15 @@ Minimiza tu puntuación, acierta lo más cerca posible del capítulo correcto y 
     <string name="ajustes_difficult_easy">Fácil</string>
     <string name="ajustes_difficult_medium">Medio</string>
     <string name="ajustes_difficult_hard">Difícil</string>
+    <string name="ajustes_select_manga">Manga</string>
+    <string name="ajustes_select_anime">Anime</string>
+
+    <string name="startButton">¡EMPEZAR!</string>
 
 
     <!--    GameActivity  -->
     <string name="game_correct_answer">¡La viñeta es del capitulo %1$d!</string>
-    <string name="game_guess_answer">¡Intenta adivinar el capítulo justo!</string>
+    <string name="game_guess_answer">¡Adivina el capítulo justo!</string>
     <string name="game_vinyeta">Viñeta %1$d/%2$d</string>
     <string name="game_guess_text">¿Qué capítulo es?</string>
     <string name="game_checkbutton_guess">COMPROBAR</string>
@@ -52,15 +56,15 @@ Minimiza tu puntuación, acierta lo más cerca posible del capítulo correcto y 
 
 
     <!--    EndActivity  -->
-    <string name="end_title">"¡Se acabó!</string>
+    <string name="end_title">"¡SE ACABÓ!</string>
 <!--    <string name="restartButton">"Volver a jugar</string>-->
     <string name="restartButton">"Cerrar juego</string>
 
     <string name="end_results_title">"Resultados</string>
 
     <string name="end_register_title">"Registro</string>
-    <string name="end_register_player_scored">%1$s puntuó %2$d</string>
-    <string name="end_register_turn">Turno %1$d</string>
+    <string name="end_register_player_scored">%1$s PUNTUÓ %2$d</string>
+    <string name="end_register_turn">TURNO %1$d</string>
 
     <string name="end_highscore_title">"Histórico</string>
 

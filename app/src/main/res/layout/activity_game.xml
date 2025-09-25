@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main"
@@ -7,227 +7,277 @@
     android:layout_height="match_parent"
     tools:context=".GameActivity">
 
-    <TextView
-        android:id="@+id/textFeedback"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="16dp"
-        android:text="@string/game_guess_text"
-        android:textAlignment="center"
-        android:textSize="16sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:text="Jugador 1 se ha acercado más: a x capítulos." />
-
-    <Button
-        android:id="@+id/checkButton"
-        android:layout_width="230dp"
-        android:layout_height="47dp"
-        android:layout_marginBottom="16dp"
-        android:backgroundTint="#F44336"
-        android:onClick="onNextPressed"
-        android:text="@string/game_checkbutton_guess"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.497"
-        app:layout_constraintStart_toStartOf="parent" />
-
-    <TextView
-        android:id="@+id/textNumPanel"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
-        android:textSize="14sp"
-        app:layout_constraintBottom_toTopOf="@+id/checkButton"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
-
     <ImageView
-        android:id="@+id/imageView"
-        android:layout_width="345dp"
-        android:layout_height="356dp"
-        app:layout_constraintBottom_toTopOf="@+id/textNumPanel"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textResult"
-        app:srcCompat="@drawable/default_image"
-        tools:srcCompat="@drawable/img1" />
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scaleType="centerCrop"
+        android:src="@drawable/background_game_activity" />
 
-    <LinearLayout
-        android:id="@+id/linearLayout"
-        android:layout_width="368dp"
-        android:layout_height="187dp"
-        android:layout_marginStart="32dp"
-        android:layout_marginTop="24dp"
-        android:layout_marginEnd="32dp"
-        android:orientation="vertical"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textFeedback">
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
+       <FrameLayout
+           android:id="@+id/textResultFrame"
+           android:layout_width="match_parent"
+           android:layout_height="40dp"
 
-            <TextView
-                android:id="@+id/textNameJ1"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:ellipsize="start"
-                android:text="@string/j1_default"
-                android:textAlignment="center" />
+           android:layout_marginTop="8dp"
+           android:layout_marginStart="32dp"
+           android:layout_marginEnd="32dp"
 
-            <EditText
-                android:id="@+id/guessTextJ1"
-                android:layout_width="1dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:ems="10"
-                android:inputType="number"
-                android:textAlignment="center"
-                tools:text="17" />
+           app:layout_constraintBottom_toTopOf="@id/linearLayout"
+           app:layout_constraintEnd_toEndOf="parent"
+           app:layout_constraintStart_toStartOf="parent"
+           app:layout_constraintTop_toTopOf="parent"
+           >
 
-            <TextView
-                android:id="@+id/textScoreJ1"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="0"
-                android:textAlignment="center"
-                android:textColor="#F44336"
-                android:textSize="24sp"
-                android:textStyle="bold"
-                tools:text="100" />
-        </LinearLayout>
+           <ImageView
+               android:layout_width="match_parent"
+               android:layout_height="match_parent"
+               android:scaleType="centerCrop"
+               android:background="@drawable/bg_cuadro_texto"/>
+
+           <TextView
+               android:id="@+id/textResult"
+               android:layout_width="wrap_content"
+               android:layout_height="wrap_content"
+               android:fontFamily="@font/komika"
+               android:text="@string/game_guess_answer"
+               android:textAlignment="center"
+               android:textColor="@color/white"
+               android:textSize="16sp"
+               android:layout_gravity="center"
+
+               tools:text="La viñeta es del capítulo 1000" />
+
+       </FrameLayout>
+
 
         <LinearLayout
+            android:id="@+id/linearLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:layout_marginStart="32dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="32dp"
+            android:orientation="vertical"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textResultFrame"
+            app:layout_constraintBottom_toTopOf="@id/textNumPanel">
 
-            <TextView
-                android:id="@+id/textNameJ2"
-                android:layout_width="wrap_content"
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:ellipsize="start"
-                android:text="@string/j2_default"
-                android:textAlignment="center" />
+                android:orientation="horizontal">
 
-            <EditText
-                android:id="@+id/guessTextJ2"
-                android:layout_width="1dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:ems="10"
-                android:inputType="number"
-                android:textAlignment="center"
-                tools:text="105" />
+                <TextView
+                    android:id="@+id/textNameJ1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:ellipsize="start"
+                    android:text="@string/j1_default"
+                    android:textAlignment="center"
+                    android:fontFamily="@font/komika"/>
 
-            <TextView
-                android:id="@+id/textScoreJ2"
-                android:layout_width="wrap_content"
+                <EditText
+                    android:id="@+id/guessTextJ1"
+                    android:layout_width="10dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:ems="10"
+                    android:inputType="number"
+                    android:textAlignment="center"
+                    tools:text="17"
+                    android:fontFamily="@font/komika"/>
+
+                <TextView
+                    android:id="@+id/textScoreJ1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="0"
+                    android:textAlignment="center"
+                    android:textColor="#F44336"
+                    android:textSize="24sp"
+                    android:textStyle="bold"
+                    tools:text="100"
+                    android:fontFamily="@font/komika"/>
+            </LinearLayout>
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="0"
-                android:textAlignment="center"
-                android:textColor="#F44336"
-                android:textSize="24sp"
-                android:textStyle="bold"
-                tools:text="100" />
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/textNameJ2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:ellipsize="start"
+                    android:text="@string/j2_default"
+                    android:textAlignment="center"
+                    android:fontFamily="@font/komika" />
+
+                <EditText
+                    android:id="@+id/guessTextJ2"
+                    android:layout_width="10dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:ems="10"
+                    android:inputType="number"
+                    android:textAlignment="center"
+                    tools:text="105"
+                    android:fontFamily="@font/komika"/>
+
+                <TextView
+                    android:id="@+id/textScoreJ2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="0"
+                    android:textAlignment="center"
+                    android:textColor="#F44336"
+                    android:textSize="24sp"
+                    android:textStyle="bold"
+                    tools:text="100"
+                    android:fontFamily="@font/komika"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/textNameJ3"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="@string/j3_default"
+                    android:textAlignment="center"
+                    android:fontFamily="@font/komika"/>
+
+                <EditText
+                    android:id="@+id/guessTextJ3"
+                    android:layout_width="10dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:ems="10"
+                    android:inputType="number"
+                    android:textAlignment="center"
+                    tools:text="10"
+                    android:fontFamily="@font/komika"/>
+
+                <TextView
+                    android:id="@+id/textScoreJ3"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="0"
+                    android:textAlignment="center"
+                    android:textColor="#F44336"
+                    android:textSize="24sp"
+                    android:textStyle="bold"
+                    tools:text="100"
+                    android:fontFamily="@font/komika"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/textNameJ4"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="@string/j4_default"
+                    android:textAlignment="center"
+                    android:fontFamily="@font/komika"/>
+
+                <EditText
+                    android:id="@+id/guessTextJ4"
+                    android:layout_width="10dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:ems="10"
+                    android:inputType="number"
+                    android:textAlignment="center"
+                    tools:text="20"
+                    android:fontFamily="@font/komika"/>
+
+                <TextView
+                    android:id="@+id/textScoreJ4"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="0"
+                    android:textAlignment="center"
+                    android:textColor="#F44336"
+                    android:textSize="24sp"
+                    android:textStyle="bold"
+                    tools:text="100"
+                    android:fontFamily="@font/komika"/>
+            </LinearLayout>
+
         </LinearLayout>
 
-        <LinearLayout
-            android:layout_width="match_parent"
+        <TextView
+            android:id="@+id/textNumPanel"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:layout_marginTop="8dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/linearLayout"
 
-            <TextView
-                android:id="@+id/textNameJ3"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="@string/j3_default"
-                android:textAlignment="center" />
+            android:fontFamily="@font/komika_bold"
+            android:textSize="14sp"
+            android:background="#F44336"
+            android:padding="8dp"
+            android:textColor="@color/white"
+            tools:text="Viñeta 1/5" />
 
-            <EditText
-                android:id="@+id/guessTextJ3"
-                android:layout_width="1dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:ems="10"
-                android:inputType="number"
-                android:textAlignment="center"
-                tools:text="10" />
-
-            <TextView
-                android:id="@+id/textScoreJ3"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="0"
-                android:textAlignment="center"
-                android:textColor="#F44336"
-                android:textSize="24sp"
-                android:textStyle="bold"
-                tools:text="100" />
-        </LinearLayout>
-
-        <LinearLayout
+<!--        TODO: IMPROVE-->
+        <ImageView
+            android:id="@+id/imageView"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:layout_height="0dp"
+            android:layout_marginStart="30dp"
+            android:layout_marginEnd="30dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginBottom="16dp"
 
-            <TextView
-                android:id="@+id/textNameJ4"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="@string/j4_default"
-                android:textAlignment="center" />
+            app:layout_constraintBottom_toTopOf="@+id/checkButton"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textNumPanel"
 
-            <EditText
-                android:id="@+id/guessTextJ4"
-                android:layout_width="1dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:ems="10"
-                android:inputType="number"
-                android:textAlignment="center"
-                tools:text="20" />
 
-            <TextView
-                android:id="@+id/textScoreJ4"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="0"
-                android:textAlignment="center"
-                android:textColor="#F44336"
-                android:textSize="24sp"
-                android:textStyle="bold"
-                tools:text="100" />
-        </LinearLayout>
+            app:srcCompat="@drawable/default_image"
+            tools:srcCompat="@drawable/img1" />
 
-    </LinearLayout>
+        <Button
+            android:id="@+id/checkButton"
+            android:layout_width="234dp"
+            android:layout_height="75dp"
+            android:layout_marginBottom="36dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
 
-    <TextView
-        android:id="@+id/textResult"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="16dp"
-        android:textAlignment="center"
-        android:textSize="24sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/linearLayout"
-        tools:text="La viñeta es del capítulo 1000" />
+            android:backgroundTint="#F44336"
+            android:fontFamily="@font/komika_bold_italic"
+            android:onClick="onNextPressed"
+            android:text="@string/game_checkbutton_guess"
+            android:textSize="20sp"/>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+
+</FrameLayout>

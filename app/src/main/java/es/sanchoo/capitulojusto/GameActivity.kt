@@ -4,6 +4,8 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.content.pm.ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
+import android.media.AudioAttributes
+import android.media.SoundPool
 import android.os.Bundle
 import android.view.View
 import android.widget.Button
@@ -27,6 +29,18 @@ import es.sanchoo.capitulojusto.views.GameView
 class GameActivity : AppCompatActivity(), GameView {
     // CONTROLADOR: hace de intermediario entre la vista y la lógica
     private val viewModel: GameViewModel by viewModels()
+    private lateinit var sp: SoundPool
+    private val soundIds = IntArray(7)
+
+    private val soundResIds = arrayOf(
+        R.raw.answer_sound_0,
+        R.raw.answer_sound_1,
+        R.raw.answer_sound_2,
+        R.raw.answer_sound_3,
+        R.raw.answer_sound_4,
+        R.raw.answer_sound_5,
+        R.raw.answer_sound_6
+    )
 
     @SuppressLint("SourceLockedOrientationActivity")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -129,6 +143,20 @@ class GameActivity : AppCompatActivity(), GameView {
                 finish()
             }
         }
+
+        val audioAttributes = AudioAttributes.Builder()
+            .setUsage(AudioAttributes.USAGE_GAME)
+            .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
+            .build()
+
+        sp = SoundPool.Builder()
+            .setMaxStreams(1)
+            .setAudioAttributes(audioAttributes)
+            .build()
+
+        for (i in soundResIds.indices) {
+            soundIds[i] = sp.load(this, soundResIds[i], 1)
+        }
     }
 
     private fun loadSolutions(): Table {
@@ -137,6 +165,7 @@ class GameActivity : AppCompatActivity(), GameView {
     }
 
     fun onNextPressed(view: View){
+
         val checkButton = findViewById<Button>(R.id.checkButton)
         val result = viewModel.onNext(getChapters())
         if (result != null){
@@ -162,7 +191,8 @@ class GameActivity : AppCompatActivity(), GameView {
         val rightChapter: Int = viewModel.currentPanel!!.rightChapter
         result.text = getString(R.string.game_correct_answer, rightChapter)
 
-        // TODO: FEEDBACK, IMPLEMENTARLO CON SONIDOS?
+        val soundIndex = viewModel.getSoundIndex()
+        sp.play(soundIds[soundIndex], 1f, 1f, 1, 0, 1f)
 
     }
 
@@ -206,10 +236,7 @@ class GameActivity : AppCompatActivity(), GameView {
     }
 
     private fun clearFeedback() {
-        val feedback: TextView = findViewById(R.id.textFeedback)
         val result: TextView = findViewById(R.id.textResult)
-
-        feedback.text = ""
         result.text = getString(R.string.game_guess_answer)
     }
 
@@ -296,6 +323,7 @@ class GameActivity : AppCompatActivity(), GameView {
 
     override fun onDestroy() {
         super.onDestroy()
+        sp.release()
     }
 
 }

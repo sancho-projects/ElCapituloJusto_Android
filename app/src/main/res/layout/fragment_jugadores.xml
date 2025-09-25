@@ -14,11 +14,14 @@
         tools:context=".menu.jugadoresFragment">
 
         <TextView
-            android:id="@+id/textView5"
+            android:id="@+id/textHint_n_players"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
             android:gravity="center"
-            android:text="@string/jugadores_number_text" />
+            android:text="@string/jugadores_number_text"
+            android:fontFamily="@font/komika"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <SeekBar
             android:id="@+id/seekBarPlayers"
@@ -30,7 +33,7 @@
             android:progress="1"
             android:progressTint="#BD362C"
             android:thumbTint="#F44336"
-            app:layout_constraintTop_toBottomOf="@+id/textView5" />
+            app:layout_constraintTop_toBottomOf="@+id/textHint_n_players" />
 
         <TextView
             android:id="@+id/textView6"
@@ -39,6 +42,7 @@
             android:layout_marginTop="24dp"
             android:gravity="center"
             android:text="@string/jugadores_name_text"
+            android:fontFamily="@font/komika"
             app:layout_constraintTop_toBottomOf="@+id/seekBarPlayers"
             tools:layout_editor_absoluteX="0dp" />
 
@@ -50,6 +54,7 @@
             android:inputType="text"
             android:maxLength="16"
             android:text="@string/j1_default"
+            android:fontFamily="@font/komika"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/textView6" />
@@ -62,6 +67,7 @@
             android:inputType="text"
             android:maxLength="16"
             android:text="@string/j2_default"
+            android:fontFamily="@font/komika"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/textJ1" />
@@ -74,6 +80,7 @@
             android:inputType="text"
             android:maxLength="16"
             android:text="@string/j3_default"
+            android:fontFamily="@font/komika"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/textJ2" />
@@ -86,6 +93,7 @@
             android:inputType="text"
             android:maxLength="16"
             android:text="@string/j4_default"
+            android:fontFamily="@font/komika"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/textJ3" />
