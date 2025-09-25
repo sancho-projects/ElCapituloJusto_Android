@@ -91,7 +91,7 @@ class registerFragment : Fragment() {
                 val score = player.getScoreAtTurn(i)
                 val playerText = TextView(requireContext()).apply {
                     text = getString(R.string.end_register_player_scored, player.name, score)
-                    textSize = 16f
+                    textSize = 18f
                     if (score == minScore) {
                         setTextColor(Color.WHITE)
                         typeface = resources.getFont(R.font.caslon_antique_bold)

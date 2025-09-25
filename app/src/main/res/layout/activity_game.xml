@@ -11,7 +11,8 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:scaleType="centerCrop"
-        android:src="@drawable/background_game_activity" />
+        android:src="@drawable/background_game_activity"
+        android:contentDescription="@string/description_game_bg"/>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -36,7 +37,8 @@
                android:layout_width="match_parent"
                android:layout_height="match_parent"
                android:scaleType="centerCrop"
-               android:background="@drawable/bg_cuadro_texto"/>
+               android:background="@drawable/bg_cuadro_texto"
+               android:contentDescription="@string/description_game_panel"/>
 
            <TextView
                android:id="@+id/textResult"
@@ -91,7 +93,8 @@
                     android:inputType="number"
                     android:textAlignment="center"
                     tools:text="17"
-                    android:fontFamily="@font/komika"/>
+                    android:fontFamily="@font/komika"
+                    android:autofillHints="Capítulo"/>
 
                 <TextView
                     android:id="@+id/textScoreJ1"
@@ -100,7 +103,7 @@
                     android:layout_weight="1"
                     android:text="0"
                     android:textAlignment="center"
-                    android:textColor="#F44336"
+                    android:textColor="@color/red"
                     android:textSize="24sp"
                     android:textStyle="bold"
                     tools:text="100"
@@ -132,7 +135,8 @@
                     android:inputType="number"
                     android:textAlignment="center"
                     tools:text="105"
-                    android:fontFamily="@font/komika"/>
+                    android:fontFamily="@font/komika"
+                    android:autofillHints="Capítulo"/>
 
                 <TextView
                     android:id="@+id/textScoreJ2"
@@ -141,7 +145,7 @@
                     android:layout_weight="1"
                     android:text="0"
                     android:textAlignment="center"
-                    android:textColor="#F44336"
+                    android:textColor="@color/red"
                     android:textSize="24sp"
                     android:textStyle="bold"
                     tools:text="100"
@@ -171,7 +175,8 @@
                     android:inputType="number"
                     android:textAlignment="center"
                     tools:text="10"
-                    android:fontFamily="@font/komika"/>
+                    android:fontFamily="@font/komika"
+                    android:autofillHints="Capítulo"/>
 
                 <TextView
                     android:id="@+id/textScoreJ3"
@@ -180,7 +185,7 @@
                     android:layout_weight="1"
                     android:text="0"
                     android:textAlignment="center"
-                    android:textColor="#F44336"
+                    android:textColor="@color/red"
                     android:textSize="24sp"
                     android:textStyle="bold"
                     tools:text="100"
@@ -210,7 +215,8 @@
                     android:inputType="number"
                     android:textAlignment="center"
                     tools:text="20"
-                    android:fontFamily="@font/komika"/>
+                    android:fontFamily="@font/komika"
+                    android:autofillHints="Capítulo"/>
 
                 <TextView
                     android:id="@+id/textScoreJ4"
@@ -219,7 +225,7 @@
                     android:layout_weight="1"
                     android:text="0"
                     android:textAlignment="center"
-                    android:textColor="#F44336"
+                    android:textColor="@color/red"
                     android:textSize="24sp"
                     android:textStyle="bold"
                     tools:text="100"
@@ -239,7 +245,7 @@
 
             android:fontFamily="@font/komika_bold"
             android:textSize="14sp"
-            android:background="#F44336"
+            android:background="@color/red"
             android:padding="8dp"
             android:textColor="@color/white"
             tools:text="Viñeta 1/5" />
@@ -272,7 +278,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
 
-            android:backgroundTint="#F44336"
+            android:backgroundTint="@color/red"
             android:fontFamily="@font/komika_bold_italic"
             android:onClick="onNextPressed"
             android:text="@string/game_checkbutton_guess"
