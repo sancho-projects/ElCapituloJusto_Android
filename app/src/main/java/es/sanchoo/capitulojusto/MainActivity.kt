@@ -6,6 +6,7 @@ import android.content.pm.ActivityInfo.*
 import android.os.Bundle
 import android.util.Log
 import android.widget.Button
+import android.widget.RadioGroup
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
@@ -61,7 +62,7 @@ class MainActivity : AppCompatActivity(), MenuView {
         // COMENZAR A JUGAR
         val buttonStartGame: Button = findViewById(R.id.startButton)
         buttonStartGame.setOnClickListener {
-            val playerFragment = vpAdapter.getFragment(0) as? jugadoresFragment // antes estaba como as?
+            val playerFragment = vpAdapter.getFragment(0) as? jugadoresFragment
             val customFragment = vpAdapter.getFragment(2) as? ajustesFragment
 
             if (playerFragment != null && customFragment != null) {
@@ -74,8 +75,9 @@ class MainActivity : AppCompatActivity(), MenuView {
                 GameSettings.dificultad[0] = customFragment.getEasyValue()
                 GameSettings.dificultad[1] = customFragment.getMediumValue()
                 GameSettings.dificultad[2] = customFragment.getHardValue()
+                GameSettings.isManga = customFragment.getIsManga()
 
-                Log.w("DEBUG", "max_cap=${GameSettings.max_cap}, easy=${GameSettings.dificultad[0]}, medium=${GameSettings.dificultad[1]}, hard=${GameSettings.dificultad[2]}")
+//                Log.w("DEBUG", "max_cap=${GameSettings.max_cap}, easy=${GameSettings.dificultad[0]}, medium=${GameSettings.dificultad[1]}, hard=${GameSettings.dificultad[2]}")
 
                 if (!HighScoreManager(this).settingsAreCorrect()) {
                     AlertDialog.Builder(this)

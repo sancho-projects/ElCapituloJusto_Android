@@ -101,7 +101,7 @@ class highscoreFragment : Fragment() {
 
             // Puntuación
             val scoreText = TextView(context).apply {
-                text = "Pts. " + "%,d".format(player.score) + " —"
+                text = "Pts. " + "%,d".format(player.score) + " — (" + player.media + ")"
                 textSize = 18f
                 textAlignment = View.TEXT_ALIGNMENT_CENTER
                 letterSpacing = 0.2f

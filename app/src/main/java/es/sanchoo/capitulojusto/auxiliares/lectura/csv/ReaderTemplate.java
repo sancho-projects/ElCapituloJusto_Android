@@ -8,15 +8,15 @@ public abstract class ReaderTemplate {
     protected BufferedReader fichero;
     protected Table table;
 
-    public abstract void openSource(); // SIEMPRE SERÁ solution.csv
+    public abstract void openSource(boolean isManga);
     public abstract void processHeaders(String headers);
     public abstract void processData(String data);
     public abstract void closeSource();
     public abstract boolean hasMoreData();
     public abstract String getNextData();
 
-    public final Table readTableFromSource() {
-        openSource();
+    public final Table readTableFromSource(boolean isManga) {
+        openSource(isManga);
         String headers = getNextData();
         processHeaders(headers);
         String data = getNextData();

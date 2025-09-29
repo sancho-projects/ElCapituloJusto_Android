@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import android.widget.CheckBox
 import android.widget.CompoundButton
 import android.widget.EditText
+import android.widget.RadioGroup
 import es.sanchoo.capitulojusto.Constants
 import es.sanchoo.capitulojusto.R
 import es.sanchoo.capitulojusto.auxiliares.applyValueFilter
@@ -20,6 +21,7 @@ class ajustesFragment : Fragment() {
     private lateinit var easyBox: CheckBox
     private lateinit var midBox: CheckBox
     private lateinit var hardBox: CheckBox
+    private lateinit var radioGroupMedia: RadioGroup
 
     private var isViewCreated = false
 
@@ -45,6 +47,8 @@ class ajustesFragment : Fragment() {
         easyBox = view.findViewById(R.id.boxEasy)
         midBox = view.findViewById(R.id.boxMedium)
         hardBox = view.findViewById(R.id.boxHard)
+
+        radioGroupMedia = view.findViewById(R.id.radioGroupMangaAnime)
 
 
         val listener = CompoundButton.OnCheckedChangeListener { buttonView, isChecked ->
@@ -85,6 +89,11 @@ class ajustesFragment : Fragment() {
         if (!isViewCreated)
             return true
         return hardBox.isChecked
+    }
+
+    fun getIsManga(): Boolean{
+        val id = radioGroupMedia.checkedRadioButtonId
+        return id == R.id.radioManga
     }
 
     fun setMaximumOfChapters(max: Int) {

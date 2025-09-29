@@ -78,5 +78,7 @@ Minimiza tu puntuación, acierta lo más cerca posible del capítulo correcto y 
     <string name="alert_close_message">"Perderás todo el progreso</string>
     <string name="alert_close_accept">"Sí</string>
     <string name="alert_close_dismiss">"Cancelar</string>
+    <string name="description_game_bg">background image</string>
+    <string name="description_game_panel">panel to guess</string>
 
 </resources>

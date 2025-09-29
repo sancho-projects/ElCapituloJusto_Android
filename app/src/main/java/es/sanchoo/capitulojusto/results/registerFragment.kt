@@ -16,6 +16,7 @@ import es.sanchoo.capitulojusto.Constants
 import es.sanchoo.capitulojusto.R
 import es.sanchoo.capitulojusto.auxiliares.Player
 
+
 class registerFragment : Fragment() {
 
     override fun onCreateView(

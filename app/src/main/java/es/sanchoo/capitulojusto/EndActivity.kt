@@ -55,6 +55,7 @@ class EndActivity : AppCompatActivity() {
         val easy = intent.getBooleanExtra("easy", true)
         val medium = intent.getBooleanExtra("medium", true)
         val hard = intent.getBooleanExtra("hard", true)
+        val isManga = intent.getBooleanExtra("isManga", true)
 
 
         // MENÚS
@@ -79,11 +80,12 @@ class EndActivity : AppCompatActivity() {
         }
         vpAdapter.addFragment(registerFragment, getString(R.string.end_register_title))
 
-        HighScoreManager(this).updateHighScore(players, max_cap, easy, medium, hard)
+        HighScoreManager(this).updateHighScore(players, max_cap, easy, medium, hard, isManga)
 
         val highscoreFragment = highscoreFragment().apply {
             arguments = Bundle().apply {
                 putParcelableArrayList("players", players)
+//                putBoolean("isManga", isManga)
             }
         }
         vpAdapter.addFragment(highscoreFragment, getString(R.string.end_highscore_title))

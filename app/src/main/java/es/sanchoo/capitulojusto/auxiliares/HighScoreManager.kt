@@ -13,6 +13,7 @@ import java.io.File
 data class HighScoreEntry(
     val name: String,
     val score: Int,
+    val media: String
 )
 
 class HighScoreManager(private val context: Context) {
@@ -57,17 +58,19 @@ class HighScoreManager(private val context: Context) {
         return highscores.sortedBy { it.score }.take(capacity)
     }
 
-    fun updateHighScore(players: ArrayList<Player>?, max_cap: Int, easy: Boolean, medium: Boolean, hard: Boolean) {
+    fun updateHighScore(players: ArrayList<Player>?, max_cap: Int, easy: Boolean, medium: Boolean, hard: Boolean, isManga: Boolean) {
+        val media = if (isManga) "M" else "A"
         if (settingsAreCorrect(max_cap, easy, medium, hard)) {
             players?.forEach { player ->
-                updateIfEligible(player)
+                updateIfEligible(player, media)
             }
         }
     }
 
-    private fun updateIfEligible(player: Player): Boolean {
+    private fun updateIfEligible(player: Player, media: String): Boolean {
+
         if (player.score <= getMaxScore()) {
-            val entry = HighScoreEntry(player.name, player.score)
+            val entry = HighScoreEntry(player.name, player.score, media)
             highscores.add(entry)
             highscores = highscores.sortedBy { it.score }.take(capacity).toMutableList()
             writeFile()

@@ -69,6 +69,8 @@ class jugadoresFragment : Fragment() {
     fun getNumberOfPlayers(): Int {
         return seekBar.progress
     }
+
+
     fun setPlayerName(i: Int, name: String) {
         if (i in 1..playersList.size) {
             playersList[i - 1].setText(name)

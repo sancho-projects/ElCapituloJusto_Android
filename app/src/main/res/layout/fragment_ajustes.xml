@@ -27,7 +27,7 @@
             android:fontFamily="@font/komika"/>
 
         <RadioGroup
-            android:id="@+id/radioGroup"
+            android:id="@+id/radioGroupMangaAnime"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
@@ -46,14 +46,12 @@
                 android:textSize="20sp"
                 android:text="@string/ajustes_select_manga" />
 
-            <!-- TODO: Disabled for now -->
             <RadioButton
                 android:id="@+id/radioAnime"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
                 android:theme="@style/CustomRadioButtonTheme"
-                android:clickable="false"
                 android:fontFamily="@font/komika"
                 android:textSize="20sp"
                 android:text="@string/ajustes_select_anime" />
@@ -66,7 +64,7 @@
             android:layout_marginTop="16dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/radioGroup"
+            app:layout_constraintTop_toBottomOf="@+id/radioGroupMangaAnime"
 
             android:text="@string/ajustes_max_cap_text"
             android:textSize="16sp"

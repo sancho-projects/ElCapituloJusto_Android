@@ -11,6 +11,7 @@ import android.view.View
 import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageView
+import android.widget.RadioGroup
 import android.widget.TextView
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.enableEdgeToEdge
@@ -139,6 +140,7 @@ class GameActivity : AppCompatActivity(), GameView {
                 intent.putExtra("easy", GameSettings.dificultad[0])
                 intent.putExtra("medium", GameSettings.dificultad[1])
                 intent.putExtra("hard", GameSettings.dificultad[2])
+                intent.putExtra("isManga", GameSettings.isManga)
                 startActivity(intent)
                 finish()
             }
@@ -161,7 +163,7 @@ class GameActivity : AppCompatActivity(), GameView {
 
     private fun loadSolutions(): Table {
         val csv = CSVUnlabeledFileReader(this)
-        return csv.readTableFromSource()
+        return csv.readTableFromSource(GameSettings.isManga)
     }
 
     fun onNextPressed(view: View){

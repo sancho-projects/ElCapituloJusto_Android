@@ -23,11 +23,14 @@ public class CSVUnlabeledFileReader extends ReaderTemplate {
     }
 
     @Override
-    public void openSource() {
+    public void openSource(boolean isManga) {
         try {
 //            int resourceId = context.getResources().getIdentifier(source, "raw", context.getPackageName());
 //            inputStream = context.getResources().openRawResource(resourceId);
-            inputStream = context.getResources().openRawResource(R.raw.solution);
+            inputStream = context.getResources().openRawResource((isManga)
+                            ? R.raw.solution
+                            : R.raw.solution_anime
+                    );
             fichero = new BufferedReader(new InputStreamReader(inputStream));
         } catch (Exception e) {
             Log.e("Resource Error", "Recurso no encontrado: ");

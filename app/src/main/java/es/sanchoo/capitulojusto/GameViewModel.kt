@@ -33,6 +33,7 @@ class GameViewModel: ViewModel() {
 
     private var conditionsSet: MutableSet<Int> = mutableSetOf()
     private var limitChapter: Int = MAX_CAP_DEFAULT
+    private var isManga: Boolean = true
 
     private var state : State = State.GUESSING
 
@@ -67,6 +68,8 @@ class GameViewModel: ViewModel() {
         if (admitEasy) conditionsSet.add(1)
         if (admitMedium) conditionsSet.add(2)
         if (admitHard) conditionsSet.add(3)
+
+        isManga = GameSettings.isManga
     }
 
     fun setPlayers(){
@@ -121,7 +124,7 @@ class GameViewModel: ViewModel() {
         val chapter: Int = row[1]
         val difficulty: Int = row[2]
 
-        return Panel(fileName, chapter, difficulty)
+        return Panel(fileName, chapter, difficulty, isManga)
 
     }
 
