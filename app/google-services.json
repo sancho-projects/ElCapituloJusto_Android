@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "250593101717",
+    "project_id": "elcapitulojusto",
+    "storage_bucket": "elcapitulojusto.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:250593101717:android:31e4a5a044f3f7183a189c",
+        "android_client_info": {
+          "package_name": "es.sanchoo.capitulojusto"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDlosMjfEEPBtp5PrSB_8bO-g8qQBZVitc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

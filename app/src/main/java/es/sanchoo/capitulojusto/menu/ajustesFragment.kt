@@ -92,6 +92,9 @@ class ajustesFragment : Fragment() {
     }
 
     fun getIsManga(): Boolean{
+        if (!isViewCreated) {
+            return true
+        }
         val id = radioGroupMedia.checkedRadioButtonId
         return id == R.id.radioManga
     }
