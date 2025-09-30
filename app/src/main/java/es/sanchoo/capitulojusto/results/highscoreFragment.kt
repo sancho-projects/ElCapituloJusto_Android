@@ -15,6 +15,7 @@ import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
 import com.google.firebase.Firebase
+import com.google.firebase.firestore.Query
 import com.google.firebase.firestore.firestore
 import es.sanchoo.capitulojusto.R
 import es.sanchoo.capitulojusto.auxiliares.Player
@@ -27,6 +28,7 @@ data class HighScoreEntry(
 )
 
 class highscoreFragment : Fragment() {
+    private val NUM_JUG_HS: Long = 10
     private val db = Firebase.firestore
     private val collection = "highscores"
 
@@ -69,8 +71,9 @@ class highscoreFragment : Fragment() {
         var currentRank = 1
         var prevScore: Int? = null
 
-        db.collection(collection).orderBy("score", com.google.firebase.firestore.Query.Direction.ASCENDING)
-            .limit(10)
+        db.collection(collection)
+            .orderBy("score", Query.Direction.ASCENDING)
+            .limit(NUM_JUG_HS)
             .get()
             .addOnSuccessListener { result ->
                 for ((index, document) in result.withIndex()) {
@@ -156,8 +159,12 @@ class highscoreFragment : Fragment() {
     }
 
     fun updateHighScore(players: ArrayList<Player>?, medio: String) {
+//        db.runTransaction { transaction ->
+//
+//        }
         players?.forEach { player ->
             val entry = HighScoreEntry(player.name, player.score, medio)
+
             db.collection(collection)
                 .add(entry)
                 .addOnSuccessListener {
