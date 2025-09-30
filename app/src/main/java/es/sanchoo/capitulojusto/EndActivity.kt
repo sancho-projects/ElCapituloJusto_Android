@@ -11,7 +11,7 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
-import es.sanchoo.capitulojusto.auxiliares.HighScoreManager
+import es.sanchoo.capitulojusto.Constants.MAX_CAP_DEFAULT
 import es.sanchoo.capitulojusto.auxiliares.Player
 import es.sanchoo.capitulojusto.menu.VPAdapter
 import es.sanchoo.capitulojusto.results.highscoreFragment
@@ -80,12 +80,12 @@ class EndActivity : AppCompatActivity() {
         }
         vpAdapter.addFragment(registerFragment, getString(R.string.end_register_title))
 
-        HighScoreManager(this).updateHighScore(players, max_cap, easy, medium, hard, isManga)
-
+        val settingsAreCorrect = (max_cap == MAX_CAP_DEFAULT && easy && medium && hard)
         val highscoreFragment = highscoreFragment().apply {
             arguments = Bundle().apply {
                 putParcelableArrayList("players", players)
-//                putBoolean("isManga", isManga)
+                putBoolean("settingsAreCorrect", settingsAreCorrect)
+                putBoolean("isManga", isManga)
             }
         }
         vpAdapter.addFragment(highscoreFragment, getString(R.string.end_highscore_title))

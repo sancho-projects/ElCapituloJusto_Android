@@ -6,7 +6,7 @@ import android.content.pm.ActivityInfo.*
 import android.os.Bundle
 import android.util.Log
 import android.widget.Button
-import android.widget.RadioGroup
+import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
@@ -16,8 +16,10 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
-import es.sanchoo.capitulojusto.auxiliares.HighScoreManager
-import es.sanchoo.capitulojusto.auxiliares.Player
+import com.google.firebase.storage.FirebaseStorage
+//import com.google.firebase.storage.FirebaseStorage
+//import com.google.firebase.storage.StorageReference
+import es.sanchoo.capitulojusto.Constants.MAX_CAP_DEFAULT
 import es.sanchoo.capitulojusto.menu.GameSettings
 import es.sanchoo.capitulojusto.menu.VPAdapter
 import es.sanchoo.capitulojusto.menu.ajustesFragment
@@ -33,6 +35,8 @@ class MainActivity : AppCompatActivity(), MenuView {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+
+        subirBBDD()
 
         setContentView(R.layout.activity_main)
 
@@ -79,7 +83,11 @@ class MainActivity : AppCompatActivity(), MenuView {
 
 //                Log.w("DEBUG", "max_cap=${GameSettings.max_cap}, easy=${GameSettings.dificultad[0]}, medium=${GameSettings.dificultad[1]}, hard=${GameSettings.dificultad[2]}")
 
-                if (!HighScoreManager(this).settingsAreCorrect()) {
+                if (!(GameSettings.max_cap == MAX_CAP_DEFAULT
+                            && GameSettings.dificultad[0]
+                            && GameSettings.dificultad[1]
+                            && GameSettings.dificultad[2])) // Settings por defecto
+                {
                     AlertDialog.Builder(this)
                         .setTitle("Aviso")
                         .setMessage("Con estos ajustes no entrarás en el top histórico.")
@@ -97,5 +105,20 @@ class MainActivity : AppCompatActivity(), MenuView {
             }
         }
 
+    }
+
+
+    fun subirBBDD() {
+        val storage = FirebaseStorage.getInstance()
+
+        val inputStream = this.resources.openRawResource(R.raw.img1)
+        val storageRef = storage.reference.child("paneles/manga/img1.jpg")
+
+        val uploadTask = storageRef.putStream(inputStream)
+        uploadTask.addOnFailureListener {
+            Toast.makeText(this, "Error al subir el panel", Toast.LENGTH_SHORT).show()
+        }.addOnSuccessListener {
+            Toast.makeText(this, "Panel subido correctamente", Toast.LENGTH_SHORT).show()
+        }
     }
 }
