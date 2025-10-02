@@ -5,6 +5,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.CheckBox
 import android.widget.CompoundButton
 import android.widget.EditText
@@ -63,6 +64,15 @@ class ajustesFragment : Fragment() {
         easyBox.setOnCheckedChangeListener(listener)
         midBox.setOnCheckedChangeListener(listener)
         hardBox.setOnCheckedChangeListener(listener)
+
+
+        val defaultButton = view.findViewById<Button>(R.id.buttonDefault)
+        defaultButton.setOnClickListener {
+            setMaximumOfChapters(Constants.MAX_CAP_DEFAULT)
+            setEasyValue(true)
+            setMediumValue(true)
+            setHardValue(true)
+        }
     }
 
 

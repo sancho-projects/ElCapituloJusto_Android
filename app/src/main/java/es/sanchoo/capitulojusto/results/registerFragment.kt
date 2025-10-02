@@ -1,23 +1,30 @@
 package es.sanchoo.capitulojusto.results
 
 import android.graphics.Color
+import android.net.Uri
 import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.annotation.RequiresApi
-import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import com.bumptech.glide.Glide
+import com.google.firebase.storage.FirebaseStorage
 import es.sanchoo.capitulojusto.Constants
 import es.sanchoo.capitulojusto.R
 import es.sanchoo.capitulojusto.auxiliares.Player
+import kotlin.collections.set
+import androidx.core.net.toUri
 
 
 class registerFragment : Fragment() {
+    private val db = FirebaseStorage.getInstance()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -34,12 +41,13 @@ class registerFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         val players = arguments?.getParcelableArrayList<Player>("players") ?: arrayListOf()
-        val panels = arguments?.getStringArrayList("panels") ?: arrayListOf()
+        val uriList = arguments?.getStringArrayList("uriList")
+
 
         val containerRecords = view.findViewById<LinearLayout>(R.id.containerRecords)
         containerRecords.removeAllViews()
 
-        for (i in 0 until minOf(Constants.MAX_TURNOS, panels.size)) {
+        for (i in 0 until minOf(Constants.MAX_TURNOS, uriList?.size!!)) {
             // TURNO X
             val turnTitle = TextView(requireContext()).apply {
                 text = getString(R.string.end_register_turn, i + 1)
@@ -63,18 +71,19 @@ class registerFragment : Fragment() {
             }
 
             // VIÑETA
-            val bullet = View(requireContext()).apply {
+            val imageView = ImageView(requireContext()).apply {
                 val sizeInPx = (48 * resources.displayMetrics.density).toInt()
                 layoutParams = LinearLayout.LayoutParams(sizeInPx, sizeInPx).apply {
                     marginEnd = (16 * resources.displayMetrics.density).toInt()
                 }
-                val resourceId = resources.getIdentifier(panels.get(i), "drawable", requireContext().packageName)
-                background = if (resourceId != 0) {
-                    ContextCompat.getDrawable(requireContext(), resourceId)
-                } else {
-                    ContextCompat.getDrawable(requireContext(), R.drawable.default_image)
-                }
             }
+
+            val imagePath = uriList[i].toUri()
+            Glide.with(this)
+                .load(imagePath)
+                .placeholder(R.drawable.placeholder_loading)
+                .error(R.drawable.placeholder_loading)
+                .into(imageView)
 
             // REGISTRO DE LOS JUGADORES
             val registerLayout = LinearLayout(requireContext()).apply {
@@ -103,7 +112,7 @@ class registerFragment : Fragment() {
                 }
                 registerLayout.addView(playerText)
             }
-            row.addView(bullet)
+            row.addView(imageView)
             row.addView(registerLayout)
             containerRecords.addView(row)
         }

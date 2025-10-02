@@ -50,12 +50,15 @@ class EndActivity : AppCompatActivity() {
 
         val results = intent.getParcelableArrayListExtra<Player>("rankedPlayers")
         val players = intent.getParcelableArrayListExtra<Player>("players")
-        val panels = intent.getStringArrayListExtra("panels")
+
         val max_cap = intent.getIntExtra("max_cap", 1000)
         val easy = intent.getBooleanExtra("easy", true)
         val medium = intent.getBooleanExtra("medium", true)
         val hard = intent.getBooleanExtra("hard", true)
         val isManga = intent.getBooleanExtra("isManga", true)
+
+        val uriList = intent.getStringArrayListExtra("uriList")
+
 
 
         // MENÚS
@@ -74,7 +77,7 @@ class EndActivity : AppCompatActivity() {
         val registerFragment = registerFragment().apply {
             arguments = Bundle().apply {
                 putParcelableArrayList("players", players)
-                putStringArrayList("panels", panels)
+                putStringArrayList("uriList", uriList)
                 putInt("max_cap", max_cap)
             }
         }

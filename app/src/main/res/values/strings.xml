@@ -41,6 +41,7 @@ Minimiza tu puntuación, acierta lo más cerca posible del capítulo correcto y 
     <string name="ajustes_difficult_hard">Difícil</string>
     <string name="ajustes_select_manga">Manga</string>
     <string name="ajustes_select_anime">Anime</string>
+    <string name="ajustes_default">Ajustes por defecto</string>
 
     <string name="startButton">¡EMPEZAR!</string>
 

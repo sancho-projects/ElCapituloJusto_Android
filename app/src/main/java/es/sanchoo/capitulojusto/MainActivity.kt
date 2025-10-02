@@ -1,8 +1,11 @@
 package es.sanchoo.capitulojusto
 
 import android.annotation.SuppressLint
+import android.content.Context
 import android.content.Intent
 import android.content.pm.ActivityInfo.*
+import android.net.ConnectivityManager
+import android.net.NetworkCapabilities
 import android.os.Bundle
 import android.widget.Button
 import androidx.activity.enableEdgeToEdge
@@ -30,6 +33,17 @@ class MainActivity : AppCompatActivity(), MenuView {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+
+        if (!isNetworkAvailable()) {
+            AlertDialog.Builder(this)
+                .setTitle("Sin conexión a Internet")
+                .setMessage("Esta aplicación necesita conexión a Internet para funcionar correctamente.")
+                .setPositiveButton("Aceptar") { _, _ ->
+                    finishAffinity() // Cierra la app completamente
+                }
+                .setCancelable(false) // Opcional: evita que se cierre tocando fuera
+                .show()
+        }
 
         setContentView(R.layout.activity_main)
 
@@ -98,6 +112,13 @@ class MainActivity : AppCompatActivity(), MenuView {
             }
         }
 
+    }
+
+    private fun isNetworkAvailable(): Boolean {
+        val connectivityManager = getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        val network = connectivityManager.activeNetwork ?: return false
+        val capabilities = connectivityManager.getNetworkCapabilities(network) ?: return false
+        return capabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
     }
 
 }

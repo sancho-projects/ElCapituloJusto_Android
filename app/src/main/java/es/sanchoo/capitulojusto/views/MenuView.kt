@@ -1,6 +1,6 @@
 package es.sanchoo.capitulojusto.views
 
-interface MenuView {
+interface MenuView { //todo
 /*    fun getStatus(): String
 
     fun getChapters(): List<Int>

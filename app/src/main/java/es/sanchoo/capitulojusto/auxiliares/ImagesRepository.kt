@@ -12,31 +12,32 @@ import java.io.InputStreamReader
 class ImagesRepository {
 companion object{
     const val MAX_IMAGE = 45
-    const val MEDIA = "anime"
 
-    fun subirImgsBBDD(context: Context, resources: Resources, packageName: String) {
+    fun subirImgstoFirestorage(context: Context, resources: Resources, packageName: String, isManga: Boolean = true) {
+        val media = if (isManga) "manga" else "anime"
         val storage = FirebaseStorage.getInstance()
 
-        for (i in 1..ImagesRepository.Companion.MAX_IMAGE) {
+        for (i in 1..MAX_IMAGE) {
             val resourceName = "img$i"
             val resId = resources.getIdentifier(resourceName, "raw", packageName)
             if (resId != 0) {
                 val inputStream = resources.openRawResource(resId)
-                val storageRef = storage.reference.child("paneles/$MEDIA/$resourceName.jpg")
+                val storageRef = storage.reference.child("paneles/$media/$resourceName.jpg")
                 val uploadTask = storageRef.putStream(inputStream)
                 uploadTask.addOnFailureListener {
-                    Toast.makeText(context, "Error al subir $resourceName", Toast.LENGTH_SHORT).show()
+                    Log.e("FIRESTORAGE", "Error al subir $resourceName")
                 }.addOnSuccessListener {
-                    Toast.makeText(context, "$resourceName subido correctamente", Toast.LENGTH_SHORT).show()
+                    Log.e("FIRESTORAGE", "$resourceName subido correctamente")
                 }
             } else {
-                Log.w("UPLOAD", "No se encontró el recurso: $resourceName")
+                Log.w("FIRESTORAGE", "No se encontró el recurso: $resourceName")
             }
         }
     }
 
 
-    fun subirCSVFirestore(context: Context, csvResId: Int) {
+    fun subirCSVtoFirestore(context: Context, csvResId: Int, isManga: Boolean = true) {
+        val media = if (isManga) "manga" else "anime"
         val db = FirebaseFirestore.getInstance()
 
         val inputStream = context.resources.openRawResource(csvResId)
@@ -56,9 +57,17 @@ companion object{
             val data = hashMapOf(
                 field1 to cols[1],
                 field2 to cols[2],
-                "imageURL" to "paneles/anime/img$docId"
+                "imageURL" to "paneles/$media/img$docId.jpg"
             )
-            db.collection("solutions_anime").document(docId).set(data)
+            db.collection("solutions_$media")
+                .document(docId)
+                .set(data)
+                .addOnSuccessListener {
+                    Log.d("FIRESTORE", "Documento $docId agregado en solutions_$media")
+                }.addOnFailureListener {
+                    Log.d("FIRESTORE", "Ha ocurrido un error con $docId")
+                }
+
         }
     }
 }

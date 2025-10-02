@@ -1,17 +1,18 @@
 package es.sanchoo.capitulojusto
 
 import android.annotation.SuppressLint
-import android.content.Context
 import android.content.Intent
 import android.content.pm.ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
 import android.media.AudioAttributes
 import android.media.SoundPool
+import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageView
-import android.widget.RadioGroup
+import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.enableEdgeToEdge
@@ -20,18 +21,24 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import com.google.firebase.storage.FirebaseStorage
+import es.sanchoo.capitulojusto.auxiliares.Panel
 import es.sanchoo.capitulojusto.auxiliares.Player
 import es.sanchoo.capitulojusto.auxiliares.applyValueFilter
-import es.sanchoo.capitulojusto.auxiliares.lectura.Table
-import es.sanchoo.capitulojusto.auxiliares.lectura.csv.CSVUnlabeledFileReader
 import es.sanchoo.capitulojusto.menu.GameSettings
-import es.sanchoo.capitulojusto.views.GameView
+import com.bumptech.glide.Glide
 
-class GameActivity : AppCompatActivity(), GameView {
-    // CONTROLADOR: hace de intermediario entre la vista y la lógica
+
+class GameActivity : AppCompatActivity() {
+    private val db = FirebaseStorage.getInstance()
     private val viewModel: GameViewModel by viewModels()
+    private lateinit var progressBar: ProgressBar
     private lateinit var sp: SoundPool
     private val soundIds = IntArray(7)
+
+    private val imageURLCache = mutableMapOf<String, Uri>()
+    private val uriList = ArrayList<String>()
+
 
     private val soundResIds = arrayOf(
         R.raw.answer_sound_0,
@@ -43,7 +50,7 @@ class GameActivity : AppCompatActivity(), GameView {
         R.raw.answer_sound_6
     )
 
-    @SuppressLint("SourceLockedOrientationActivity")
+    @SuppressLint("SourceLockedOrientationActivity", "MissingInflatedId")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -92,6 +99,10 @@ class GameActivity : AppCompatActivity(), GameView {
 
         viewModel.players.clear()
 
+        val checkButton = findViewById<Button>(R.id.checkButton)
+        checkButton.isClickable = false
+        checkButton.alpha = 0.5f
+
         val nameJ1: TextView = findViewById(R.id.textNameJ1)
         val nameJ2: TextView = findViewById(R.id.textNameJ2)
         val nameJ3: TextView = findViewById(R.id.textNameJ3)
@@ -110,18 +121,25 @@ class GameActivity : AppCompatActivity(), GameView {
         applyValueFilter(guessJ3, true)
         applyValueFilter(guessJ4, true)
 
+        progressBar = findViewById<ProgressBar>(R.id.progressBarGame)
+
         setPlayersInvisibles()
+        updateTurn()
 
         viewModel.setConditions()
         viewModel.setPlayers()
 
-        viewModel.setTable(loadSolutions())
-        viewModel.nextPanel()?.image?.let { setImage(it) }
+        viewModel.setTable()
+        viewModel.tableReady.observe(this) { ready ->
+            if (ready) {
+                loadImages(viewModel.getImgsFromPanels())
+                viewModel.nextPanel()?.let { setImage(it) }
+            }
+        }
 
-        updateTurn()
 
         viewModel.finishGame.observe(this) { shouldFinish ->
-            if (shouldFinish == true) {
+            if (shouldFinish) {
                 val intent = Intent(this, EndActivity::class.java)
                 val results = viewModel.getResults()
                 intent.putParcelableArrayListExtra(
@@ -132,10 +150,12 @@ class GameActivity : AppCompatActivity(), GameView {
                     "rankedPlayers",
                     ArrayList<Player>(results)
                 )
-                intent.putStringArrayListExtra(
-                    "panels",
-                    ArrayList<String>(viewModel.getImgsFromPanels())
-                )
+
+
+                intent.putStringArrayListExtra("uriList",uriList)
+//                Log.d("registerFragment", "Orden de panels: $imageURLCache")
+//                Log.d("registerFragment", "Claves de uriStringMap: ${uriStringMap.keys}")
+
                 intent.putExtra("max_cap", GameSettings.max_cap)
                 intent.putExtra("easy", GameSettings.dificultad[0])
                 intent.putExtra("medium", GameSettings.dificultad[1])
@@ -161,10 +181,7 @@ class GameActivity : AppCompatActivity(), GameView {
         }
     }
 
-    private fun loadSolutions(): Table {
-        val csv = CSVUnlabeledFileReader(this)
-        return csv.readTableFromSource(GameSettings.isManga)
-    }
+
 
     fun onNextPressed(view: View){
 
@@ -172,7 +189,7 @@ class GameActivity : AppCompatActivity(), GameView {
         val result = viewModel.onNext(getChapters())
         if (result != null){
             checkButton.text = getString(R.string.game_checkbutton_guess)
-            setImage(result.image)
+            setImage(result)
             clearFeedback()
             clearGuesses()
             updateTurn()
@@ -277,17 +294,67 @@ class GameActivity : AppCompatActivity(), GameView {
 
     }
 
-    private fun setImage(imagePath: String) {
+    private fun setImage(image: Panel) {
         val imageView: ImageView = findViewById(R.id.imageView)
-        val resId = resources.getIdentifier(imagePath, "drawable", packageName)
+        val imagePath = image.imgURL
+        val cachedUri = imageURLCache[imagePath]
 
-        if (resId != 0) {
-            imageView.setImageResource(resId)
-        } else {
-            imageView.setImageResource(R.drawable.default_image)
+        if (cachedUri != null) {
+            // La URL ya está en caché, cargar directamente
+            uriList.add(cachedUri.toString())
+
+            Glide.with(this)
+                .load(cachedUri)
+                .placeholder(R.drawable.placeholder_loading)
+                .error(R.drawable.placeholder_loading)
+                .into(imageView)
+
+        } else{
+            val storageRef = db.getReference(imagePath)
+            storageRef.downloadUrl.addOnSuccessListener { uri ->
+                imageURLCache[imagePath] = uri
+                Glide.with(this)
+                    .load(uri)
+                    .placeholder(R.drawable.placeholder_loading)
+                    .error(R.drawable.default_image)
+                    .into(imageView)
+
+                progressBar.visibility = View.GONE
+                uriList.add(uri.toString())
+
+            }.addOnFailureListener {
+                imageView.setImageResource(R.drawable.default_image)
+            }
         }
+
+
     }
 
+    private fun loadImages(images: MutableList<String>) {
+        var consultasFinalizadas = 0
+        for (imagePath in images) {
+            if (imagePath.isNotEmpty()) {
+                val storageRef = db.getReference(imagePath)
+                storageRef.downloadUrl.addOnSuccessListener { uri ->
+                    imageURLCache[imagePath] = uri
+                    Glide.with(this)
+                        .load(uri)
+                        .preload()
+
+                    consultasFinalizadas++
+                    if(consultasFinalizadas == images.size){
+                        val checkButton = findViewById<Button>(R.id.checkButton)
+                        checkButton.isClickable = true
+                        checkButton.alpha = 1.0f
+
+                        progressBar.visibility = View.GONE
+                    }
+
+                }
+
+            }
+        }
+    }
     private fun getChapters(): List<Int> {
         fun getTextOf(guess: EditText): Int{
             if (guess.text.toString() == "") {
@@ -318,9 +385,6 @@ class GameActivity : AppCompatActivity(), GameView {
         return chapters
     }
 
-    override fun getContext(): Context {
-        return this
-    }
 
 
     override fun onDestroy() {

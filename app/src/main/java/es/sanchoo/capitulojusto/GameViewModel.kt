@@ -1,20 +1,19 @@
 package es.sanchoo.capitulojusto
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.google.firebase.firestore.FirebaseFirestore
 import es.sanchoo.capitulojusto.Constants.MAX_CAP_DEFAULT
 import es.sanchoo.capitulojusto.auxiliares.Panel
 import es.sanchoo.capitulojusto.auxiliares.Player
-import es.sanchoo.capitulojusto.auxiliares.lectura.Table
 import java.util.PriorityQueue
 import java.util.Random
 import kotlin.math.abs
 import kotlin.math.min
 import es.sanchoo.capitulojusto.Constants.MAX_TURNOS
 import es.sanchoo.capitulojusto.menu.GameSettings
-
-// TODO: TENGO QUE REESTRUCTURARLO, NO ES GameVM QUIEN NOTIFICA a GameA, SINO AL REVÉS;
 
 enum class State {
     GUESSING, CHECKING
@@ -23,13 +22,20 @@ enum class State {
 const val CORRECT_ANSWER = -10
 
 class GameViewModel: ViewModel() {
-    // aquí incluiremos las funciones y variables que afectan a la lógica del programa
+    val solutions = FirebaseFirestore.getInstance()
+        .collection(
+        if (GameSettings.isManga)
+            "solutions_manga"
+        else
+            "solutions_anime"
+    )
+
     var turn: Int = 1
     var players: MutableList<Player> = mutableListOf()
 
     var currentPanel: Panel? = null
     var panels: MutableList<Panel> = mutableListOf()
-    private var scores_of_turn = mutableListOf<Int>()
+    private var scoresOfTurn = mutableListOf<Int>()
 
     private var conditionsSet: MutableSet<Int> = mutableSetOf()
     private var limitChapter: Int = MAX_CAP_DEFAULT
@@ -42,6 +48,9 @@ class GameViewModel: ViewModel() {
 
     private val _showNotEnoughPanels = MutableLiveData<Boolean>()
     val showNotEnoughPanels: LiveData<Boolean> get() = _showNotEnoughPanels
+
+    private val _tableReady = MutableLiveData<Boolean>()
+    val tableReady: LiveData<Boolean> = _tableReady
 
     fun onNext(chapters: List<Int>): Panel?{
         when(state){
@@ -89,42 +98,40 @@ class GameViewModel: ViewModel() {
     }
 
 
-    fun setTable(table: Table) {
-        setOrderOfPanels(table)
-    }
-    private fun setOrderOfPanels(table: Table) {
-        val maxPanels = min(table.numRows, MAX_TURNOS)
+    // TODO: FIREBASE
+    fun setTable() {
+        solutions.get().addOnSuccessListener { query ->
+//            Log.d("Firestore", "Total docs leídos = ${query.documents.size}")
 
-        val rng = Random(System.nanoTime())
-        val randomNumbers = (0 until table.numRows).shuffled(rng)
+            val validPanels = query.documents
+                .mapNotNull {
+                    val rightChapter = (it.get("chapter") as? String)?.toInt()
+                    val difficulty = (it.get("difficulty") as? String)?.toInt()
+                    val imageURL = it.get("imageURL") as? String
 
-        for (num in randomNumbers) {
-            val newPanel = getNewPanel(num, table)
+                    Log.d("FirestoreDoc", "Doc: chapter=$rightChapter, difficulty=$difficulty, imageURL=$imageURL")
 
-            if (newPanel.rightChapter <= limitChapter &&
-                conditionsSet.contains(newPanel.difficulty)
-            ) {
-                panels.add(newPanel)
+                    if (rightChapter != null && difficulty != null && imageURL != null &&
+                        rightChapter <= limitChapter && conditionsSet.contains(difficulty)) {
+                        Panel(rightChapter, imageURL)
+                    } else null
+                }
+                .shuffled(Random(System.nanoTime()))
+                .take(MAX_TURNOS)
+
+            Log.d("Firestore", "Total panels válidos = ${validPanels.size}")
+
+            panels.clear()
+            panels.addAll(validPanels)
+
+            if (panels.size < MAX_TURNOS) {
+                _showNotEnoughPanels.value = true
+            } else {
+                _tableReady.value = true
             }
-
-            if (panels.size >= maxPanels) break
-        }
-
-        if (panels.size < maxPanels) {
-//            Log.w("Paneles", "No se encontraron suficientes paneles que cumplan las condiciones. Generados: ${panels.size}")
+        }.addOnFailureListener {
             _showNotEnoughPanels.value = true
         }
-
-    }
-
-    private fun getNewPanel(i: Int, table: Table): Panel {
-        val row: List<Int> = table.getRowAt(i).data
-
-        val fileName: String = row[0].toString()
-        val chapter: Int = row[1]
-        val difficulty: Int = row[2]
-
-        return Panel(fileName, chapter, difficulty, isManga)
 
     }
 
@@ -141,14 +148,14 @@ class GameViewModel: ViewModel() {
 
     private fun updateScores(chapters: List<Int>) {
         val rightChapter = currentPanel!!.rightChapter
-        scores_of_turn.clear()
+        scoresOfTurn.clear()
         for (i in 0 until players.size) {
             val player = players[i]
             val guess = chapters[i]
             val score = if (guess == rightChapter) CORRECT_ANSWER
                         else abs(guess - rightChapter)
             player.addScore(score)
-            scores_of_turn.add(score)
+            scoresOfTurn.add(score)
         }
     }
 
@@ -181,18 +188,18 @@ class GameViewModel: ViewModel() {
 
     fun getImgsFromPanels(): MutableList<String> {
         val imgPanels = mutableListOf<String>()
-        panels.forEach { imgPanels.add(it.image) }
+        panels.forEach { imgPanels.add(it.imgURL) }
         return imgPanels
     }
 
     fun getSoundIndex(): Int {
         return when {
-            scores_of_turn.any { it == CORRECT_ANSWER } && scores_of_turn.count { it == CORRECT_ANSWER } > 1 -> 0 // Varios jugadores aciertan
-            scores_of_turn.any { it == CORRECT_ANSWER } -> 1
-            scores_of_turn.any { it < 10 } -> 2
-            scores_of_turn.any { it < 50 } -> 3
-            scores_of_turn.any { it > 500 } -> 6
-            scores_of_turn.any { it < 100 } -> 4
+            scoresOfTurn.any { it == CORRECT_ANSWER } && scoresOfTurn.count { it == CORRECT_ANSWER } > 1 -> 0 // Varios jugadores aciertan
+            scoresOfTurn.any { it == CORRECT_ANSWER } -> 1
+            scoresOfTurn.any { it < 10 } -> 2
+            scoresOfTurn.any { it < 50 } -> 3
+            scoresOfTurn.any { it > 500 } -> 6
+            scoresOfTurn.any { it < 100 } -> 4
             else -> 5
         }
     }

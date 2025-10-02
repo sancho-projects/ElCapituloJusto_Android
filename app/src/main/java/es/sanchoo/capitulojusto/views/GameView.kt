@@ -2,9 +2,7 @@ package es.sanchoo.capitulojusto.views
 
 import android.content.Context
 
-interface GameView {    //interfaz deonde declaramos las funciones que corresponden a la vista
-
-    abstract fun getContext(): Context
+interface GameView {    //TODO: completar
 
     // VISTA: actualizar puntuación
     // VISTA: indicar respuesta correcta
