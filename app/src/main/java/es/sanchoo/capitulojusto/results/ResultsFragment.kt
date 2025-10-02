@@ -15,13 +15,11 @@ import es.sanchoo.capitulojusto.R
 import es.sanchoo.capitulojusto.auxiliares.Player
 
 
-class resultsFragment : Fragment() {
+class ResultsFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
-
 
         return inflater.inflate(R.layout.fragment_results, container, false)
     }
@@ -45,13 +43,10 @@ class resultsFragment : Fragment() {
             val player = rankedPlayers[i]
 
             // Si no es el primer jugador y la puntuación es igual al anterior, mantienen el mismo rango
-            if (i > 0 && player.score == rankedPlayers[i - 1].score) {
-                // Mantener el mismo rango
-            } else {
+            if (i == 0 || player.score != rankedPlayers[i - 1].score) {
                 currentRank = i + 1
             }
 
-            // Crear contenedor dinámico
             val playerContainer = LinearLayout(context).apply {
                 layoutParams = LinearLayout.LayoutParams(
                     LinearLayout.LayoutParams.MATCH_PARENT,
@@ -65,7 +60,6 @@ class resultsFragment : Fragment() {
                 setPadding(16, 16, 16, 16)
             }
 
-            // Posición
             val positionText = TextView(context).apply {
                 text = currentRank.toString()
                 textSize = 18f
@@ -78,7 +72,6 @@ class resultsFragment : Fragment() {
                 }
             }
 
-            // Nombre
             val nameText = TextView(context).apply {
                 text = player.name
                 textSize = 18f
@@ -87,7 +80,6 @@ class resultsFragment : Fragment() {
 
             }
 
-            // Puntuación
             val scoreText = TextView(context).apply {
                 text = player.score.toString()
                 textSize = 18f

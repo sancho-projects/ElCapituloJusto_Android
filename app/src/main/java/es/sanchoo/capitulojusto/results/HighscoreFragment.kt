@@ -27,12 +27,10 @@ data class HighScoreEntry(
     val medio: String
 )
 
-class highscoreFragment : Fragment() {
-    private val NUM_JUG_HS: Long = 10
+class HighscoreFragment : Fragment() {
+    private val tamHighScore: Long = 10
     private val db = Firebase.firestore
     private val collection = "highscores"
-
-
 
     private var players: ArrayList<Player>? = null
 
@@ -73,7 +71,7 @@ class highscoreFragment : Fragment() {
 
         db.collection(collection)
             .orderBy("score", Query.Direction.ASCENDING)
-            .limit(NUM_JUG_HS)
+            .limit(tamHighScore)
             .get()
             .addOnSuccessListener { result ->
                 for ((index, document) in result.withIndex()) {
@@ -131,8 +129,9 @@ class highscoreFragment : Fragment() {
                     }
 
                     // Puntuación
-                    val scoreText = TextView(context).apply {
-                        text = "Pts. " + "%,d".format(score) + " — (" + medio + ")"
+                    val scoreTextView = TextView(context).apply {
+                        val scoreText = "Pts. " + "%,d".format(score) + " — (" + medio + ")"
+                        text = scoreText
                         textSize = 18f
                         textAlignment = View.TEXT_ALIGNMENT_CENTER
                         letterSpacing = 0.2f
@@ -144,7 +143,7 @@ class highscoreFragment : Fragment() {
                     playerContainer.addView(nameText)
 
                     containerLayout.addView(playerContainer)
-                    containerLayout.addView(scoreText)
+                    containerLayout.addView(scoreTextView)
                 }
                 progressBar.visibility = View.GONE
 
@@ -159,9 +158,6 @@ class highscoreFragment : Fragment() {
     }
 
     fun updateHighScore(players: ArrayList<Player>?, medio: String) {
-//        db.runTransaction { transaction ->
-//
-//        }
         players?.forEach { player ->
             val entry = HighScoreEntry(player.name, player.score, medio)
 

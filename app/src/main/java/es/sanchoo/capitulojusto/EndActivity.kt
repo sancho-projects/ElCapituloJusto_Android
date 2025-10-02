@@ -4,19 +4,19 @@ import android.os.Bundle
 import android.view.View
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.enableEdgeToEdge
-import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
-import es.sanchoo.capitulojusto.Constants.MAX_CAP_DEFAULT
+import es.sanchoo.capitulojusto.auxiliares.Constants.MAX_CAP_DEFAULT
 import es.sanchoo.capitulojusto.auxiliares.Player
-import es.sanchoo.capitulojusto.menu.VPAdapter
-import es.sanchoo.capitulojusto.results.highscoreFragment
-import es.sanchoo.capitulojusto.results.registerFragment
-import es.sanchoo.capitulojusto.results.resultsFragment
+import es.sanchoo.capitulojusto.auxiliares.VPAdapter
+import es.sanchoo.capitulojusto.auxiliares.showBackConfirmationDialog
+import es.sanchoo.capitulojusto.results.HighscoreFragment
+import es.sanchoo.capitulojusto.results.RegisterFragment
+import es.sanchoo.capitulojusto.results.ResultsFragment
 import kotlin.system.exitProcess
 
 class EndActivity : AppCompatActivity() {
@@ -28,16 +28,7 @@ class EndActivity : AppCompatActivity() {
 
         onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
-                val builder = AlertDialog.Builder(this@EndActivity)
-                builder.setTitle(R.string.alert_close_title)
-                builder.setMessage(R.string.alert_close_message)
-                builder.setPositiveButton(R.string.alert_close_accept) { _, _ ->
-                    finish()
-                }
-                builder.setNegativeButton(R.string.alert_close_dismiss) { dialog, _ ->
-                    dialog.dismiss()
-                }
-                builder.show()
+                showBackConfirmationDialog(this@EndActivity, true)
             }
         })
 
@@ -60,21 +51,20 @@ class EndActivity : AppCompatActivity() {
         val uriList = intent.getStringArrayListExtra("uriList")
 
 
-
         // MENÚS
         val viewPager: ViewPager2 = findViewById(R.id.endViewPager)
         val vpAdapter = VPAdapter(this)
         val tabLayout: TabLayout = findViewById(R.id.endTabLayout)
 
 
-        val resultsFragment = resultsFragment().apply {
+        val resultsFragment = ResultsFragment().apply {
             arguments = Bundle().apply {
                 putParcelableArrayList("rankedPlayers", results)
             }
         }
         vpAdapter.addFragment(resultsFragment, getString(R.string.end_results_title))
 
-        val registerFragment = registerFragment().apply {
+        val registerFragment = RegisterFragment().apply {
             arguments = Bundle().apply {
                 putParcelableArrayList("players", players)
                 putStringArrayList("uriList", uriList)
@@ -84,7 +74,7 @@ class EndActivity : AppCompatActivity() {
         vpAdapter.addFragment(registerFragment, getString(R.string.end_register_title))
 
         val settingsAreCorrect = (max_cap == MAX_CAP_DEFAULT && easy && medium && hard)
-        val highscoreFragment = highscoreFragment().apply {
+        val highscoreFragment = HighscoreFragment().apply {
             arguments = Bundle().apply {
                 putParcelableArrayList("players", players)
                 putBoolean("settingsAreCorrect", settingsAreCorrect)
@@ -100,8 +90,7 @@ class EndActivity : AppCompatActivity() {
 
     }
 
-    fun onRestartPressed(view: View) { // TODO: hasta que descubra el error
-//        finish()
+    fun onRestartPressed(view: View) {
         finishAffinity()  // Cierra esta Activity y todas las que estén debajo en la pila
         exitProcess(0)    // Mata el proceso para que al abrir de nuevo se arranque limpio
     }

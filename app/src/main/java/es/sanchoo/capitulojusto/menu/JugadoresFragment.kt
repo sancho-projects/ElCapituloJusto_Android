@@ -9,7 +9,7 @@ import android.widget.SeekBar
 import android.widget.TextView
 import es.sanchoo.capitulojusto.R
 
-class jugadoresFragment : Fragment() {
+class JugadoresFragment : Fragment() {
     private lateinit var seekBar: SeekBar
     private val playersList = mutableListOf<TextView>()
 
@@ -31,18 +31,17 @@ class jugadoresFragment : Fragment() {
         playersList.add(view.findViewById(R.id.textJ3))
         playersList.add(view.findViewById(R.id.textJ4))
 
-        // Configura el listener para la SeekBar
         seekBar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
                 updatePlayersVisibility(progress)
             }
 
             override fun onStartTrackingTouch(seekBar: SeekBar?) {
-                // VACÍO
+                // pass
             }
 
             override fun onStopTrackingTouch(seekBar: SeekBar?) {
-                // O PASAR EL VALOR AHORA U OLVIDARME Y PEDIRLO CUANDO LE DÉ AL BOTÓN.
+                // pass
             }
 
         })
@@ -73,7 +72,7 @@ class jugadoresFragment : Fragment() {
 
     fun setPlayerName(i: Int, name: String) {
         if (i in 1..playersList.size) {
-            playersList[i - 1].setText(name)
+            playersList[i - 1].text = name
         }
     }
 

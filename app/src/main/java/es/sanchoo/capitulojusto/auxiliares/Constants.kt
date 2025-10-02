@@ -1,4 +1,4 @@
-package es.sanchoo.capitulojusto
+package es.sanchoo.capitulojusto.auxiliares
 
 object Constants {
     const val MAX_TURNOS = 5

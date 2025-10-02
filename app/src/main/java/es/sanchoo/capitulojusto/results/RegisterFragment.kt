@@ -1,10 +1,7 @@
 package es.sanchoo.capitulojusto.results
 
-import android.graphics.Color
-import android.net.Uri
 import android.os.Build
 import android.os.Bundle
-import android.util.Log
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
@@ -13,24 +10,22 @@ import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.annotation.RequiresApi
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import com.bumptech.glide.Glide
-import com.google.firebase.storage.FirebaseStorage
-import es.sanchoo.capitulojusto.Constants
+import es.sanchoo.capitulojusto.auxiliares.Constants
 import es.sanchoo.capitulojusto.R
 import es.sanchoo.capitulojusto.auxiliares.Player
-import kotlin.collections.set
 import androidx.core.net.toUri
 
 
-class registerFragment : Fragment() {
-    private val db = FirebaseStorage.getInstance()
+class RegisterFragment : Fragment() {
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
+
         return inflater.inflate(R.layout.fragment_register, container, false)
     }
 
@@ -51,15 +46,16 @@ class registerFragment : Fragment() {
             // TURNO X
             val turnTitle = TextView(requireContext()).apply {
                 text = getString(R.string.end_register_turn, i + 1)
-                textSize = 20f
-                setTextColor(Color.BLACK)
+                textSize = 24f
+                setTextColor(ContextCompat.getColor(requireContext(), R.color.wanted_text))
                 gravity = Gravity.CENTER
-                setPadding(0, 16, 0, 8) // margen superior e inferior
+                setPadding(0, 16, 0, 8)
                 typeface = resources.getFont(R.font.caslon_antique_bold)
             }
             containerRecords.addView(turnTitle)
 
 
+            // FILA DEL TURNO
             val row = LinearLayout(requireContext()).apply {
                 layoutParams = LinearLayout.LayoutParams(
                     LinearLayout.LayoutParams.MATCH_PARENT,
@@ -94,19 +90,17 @@ class registerFragment : Fragment() {
                     1f
                 )
             }
-
             val minScore = players.minOfOrNull { it.getScoreAtTurn(i) } ?: 0
-
             players.forEach { player ->
                 val score = player.getScoreAtTurn(i)
                 val playerText = TextView(requireContext()).apply {
                     text = getString(R.string.end_register_player_scored, player.name, score)
                     textSize = 18f
                     if (score == minScore) {
-                        setTextColor(Color.WHITE)
+                        setTextColor(ContextCompat.getColor(requireContext(), R.color.white))
                         typeface = resources.getFont(R.font.caslon_antique_bold)
                     } else {
-                        setTextColor(Color.BLACK)
+                        setTextColor(ContextCompat.getColor(requireContext(), R.color.wanted_text))
                         typeface = resources.getFont(R.font.caslon_antique_regular)
                     }
                 }

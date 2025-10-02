@@ -1,4 +1,4 @@
-package es.sanchoo.capitulojusto.menu;
+package es.sanchoo.capitulojusto.auxiliares;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;

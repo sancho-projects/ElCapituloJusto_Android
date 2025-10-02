@@ -10,12 +10,12 @@ import android.widget.CheckBox
 import android.widget.CompoundButton
 import android.widget.EditText
 import android.widget.RadioGroup
-import es.sanchoo.capitulojusto.Constants
+import es.sanchoo.capitulojusto.auxiliares.Constants
 import es.sanchoo.capitulojusto.R
 import es.sanchoo.capitulojusto.auxiliares.applyValueFilter
 
 
-class ajustesFragment : Fragment() {
+class AjustesFragment : Fragment() {
 
     private lateinit var editTextChapter: EditText
 
@@ -77,7 +77,6 @@ class ajustesFragment : Fragment() {
 
 
     // GETTERS
-
     fun getMaximumOfChapters(): Int{
         if (!isViewCreated)
             return 1000
@@ -109,6 +108,7 @@ class ajustesFragment : Fragment() {
         return id == R.id.radioManga
     }
 
+    // SETTERS
     fun setMaximumOfChapters(max: Int) {
         if (isViewCreated) {
             editTextChapter.setText(max.toString())
