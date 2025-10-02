@@ -9,7 +9,6 @@ import android.net.NetworkCapabilities
 import android.os.Bundle
 import android.widget.Button
 import androidx.activity.enableEdgeToEdge
-import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.view.ViewCompat
@@ -17,15 +16,16 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
-import es.sanchoo.capitulojusto.Constants.MAX_CAP_DEFAULT
+import es.sanchoo.capitulojusto.auxiliares.showNoHighScoreDialog
+import es.sanchoo.capitulojusto.auxiliares.showNoInternetDialog
 import es.sanchoo.capitulojusto.menu.GameSettings
-import es.sanchoo.capitulojusto.menu.VPAdapter
-import es.sanchoo.capitulojusto.menu.ajustesFragment
-import es.sanchoo.capitulojusto.menu.jugadoresFragment
-import es.sanchoo.capitulojusto.menu.reglasFragment
-import es.sanchoo.capitulojusto.views.MenuView
+import es.sanchoo.capitulojusto.menu.GameSettings.isDefaultSettings
+import es.sanchoo.capitulojusto.auxiliares.VPAdapter
+import es.sanchoo.capitulojusto.menu.AjustesFragment
+import es.sanchoo.capitulojusto.menu.JugadoresFragment
+import es.sanchoo.capitulojusto.menu.ReglasFragment
 
-class MainActivity : AppCompatActivity(), MenuView {
+class MainActivity : AppCompatActivity() {
     lateinit var vpAdapter: VPAdapter
 
     @SuppressLint("SourceLockedOrientationActivity")
@@ -35,16 +35,8 @@ class MainActivity : AppCompatActivity(), MenuView {
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
 
         if (!isNetworkAvailable()) {
-            AlertDialog.Builder(this)
-                .setTitle("Sin conexión a Internet")
-                .setMessage("Esta aplicación necesita conexión a Internet para funcionar correctamente.")
-                .setPositiveButton("Aceptar") { _, _ ->
-                    finishAffinity() // Cierra la app completamente
-                }
-                .setCancelable(false) // Opcional: evita que se cierre tocando fuera
-                .show()
+            showNoInternetDialog(this)
         }
-
         setContentView(R.layout.activity_main)
 
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
@@ -60,9 +52,9 @@ class MainActivity : AppCompatActivity(), MenuView {
         vpAdapter = VPAdapter(this)
         val tabLayout: TabLayout = findViewById(R.id.tabLayout)
 
-        vpAdapter.addFragment(jugadoresFragment(), "Jugadores")
-        vpAdapter.addFragment(reglasFragment(), "Cómo jugar")
-        vpAdapter.addFragment(ajustesFragment(), "Ajustes")
+        vpAdapter.addFragment(JugadoresFragment(), "Jugadores")
+        vpAdapter.addFragment(ReglasFragment(), "Cómo jugar")
+        vpAdapter.addFragment(AjustesFragment(), "Ajustes")
         viewPager.setAdapter(vpAdapter)
 
         TabLayoutMediator(tabLayout, viewPager) { tab, position ->
@@ -73,8 +65,8 @@ class MainActivity : AppCompatActivity(), MenuView {
         // COMENZAR A JUGAR
         val buttonStartGame: Button = findViewById(R.id.startButton)
         buttonStartGame.setOnClickListener {
-            val playerFragment = vpAdapter.getFragment(0) as? jugadoresFragment
-            val customFragment = vpAdapter.getFragment(2) as? ajustesFragment
+            val playerFragment = vpAdapter.getFragment(0) as? JugadoresFragment
+            val customFragment = vpAdapter.getFragment(2) as? AjustesFragment
 
             if (playerFragment != null && customFragment != null) {
                 GameSettings.players_names[0] = playerFragment.getPlayerName(1)
@@ -88,23 +80,10 @@ class MainActivity : AppCompatActivity(), MenuView {
                 GameSettings.dificultad[2] = customFragment.getHardValue()
                 GameSettings.isManga = customFragment.getIsManga()
 
-//                Log.w("DEBUG", "max_cap=${GameSettings.max_cap}, easy=${GameSettings.dificultad[0]}, medium=${GameSettings.dificultad[1]}, hard=${GameSettings.dificultad[2]}")
-
-                if (!(GameSettings.max_cap == MAX_CAP_DEFAULT
-                            && GameSettings.dificultad[0]
-                            && GameSettings.dificultad[1]
-                            && GameSettings.dificultad[2])) // Settings por defecto
-                {
-                    AlertDialog.Builder(this)
-                        .setTitle("Aviso")
-                        .setMessage("Con estos ajustes no entrarás en el top histórico.")
-                        .setPositiveButton("Continuar") { _, _ ->
-                            startActivity(Intent(this, GameActivity::class.java))
-                        }
-                        .setNegativeButton("Cambiar ajustes") { dialog, _ ->
-                            dialog.dismiss()
-                        }
-                        .show()
+                if (!isDefaultSettings()){
+                    showNoHighScoreDialog(this){
+                        startActivity(Intent(this, GameActivity::class.java))
+                    }
                 } else {
                     val intent = Intent(this, GameActivity::class.java)
                     startActivity(intent)

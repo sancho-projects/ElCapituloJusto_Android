@@ -5,14 +5,13 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.google.firebase.firestore.FirebaseFirestore
-import es.sanchoo.capitulojusto.Constants.MAX_CAP_DEFAULT
+import es.sanchoo.capitulojusto.auxiliares.Constants.MAX_CAP_DEFAULT
 import es.sanchoo.capitulojusto.auxiliares.Panel
 import es.sanchoo.capitulojusto.auxiliares.Player
 import java.util.PriorityQueue
 import java.util.Random
 import kotlin.math.abs
-import kotlin.math.min
-import es.sanchoo.capitulojusto.Constants.MAX_TURNOS
+import es.sanchoo.capitulojusto.auxiliares.Constants.MAX_TURNOS
 import es.sanchoo.capitulojusto.menu.GameSettings
 
 enum class State {
@@ -166,7 +165,7 @@ class GameViewModel: ViewModel() {
     }
 
     fun restart() {
-//        _finishGame.value = false
+        _finishGame.value = false
         turn = 1
         players.forEach { it.restartGame() }
         panels.clear()

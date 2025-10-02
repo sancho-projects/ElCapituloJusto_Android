@@ -4,7 +4,7 @@ import android.text.InputFilter
 import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.widget.EditText
-import es.sanchoo.capitulojusto.Constants.MAX_CAP_DEFAULT
+import es.sanchoo.capitulojusto.auxiliares.Constants.MAX_CAP_DEFAULT
 
 private const val MIN_CAP: Int = 10
 

@@ -1,40 +1,41 @@
 package es.sanchoo.capitulojusto.auxiliares
 
 import android.os.Parcelable
+import kotlinx.parcelize.IgnoredOnParcel
 import kotlinx.parcelize.Parcelize
-import java.util.*
 
 @Parcelize
 class Player(
-    val name: String,
+    var name: String,
     var score: Int = 0,
     val register: MutableList<Int> = mutableListOf()
 ) : Comparable<Player>, Parcelable {
 
-    var minScore: Int = Int.MAX_VALUE
-    var maxScore: Int = Int.MIN_VALUE
-
-    fun getTurnMin(): List<Int> {
-        val list = mutableListOf<Int>()
-        var firstIndex = register.indexOf(minScore)
-        var lastIndex = register.lastIndexOf(minScore)
-        list.add(lastIndex)
-        while (firstIndex != lastIndex) {
-            val subRegister = register.subList(0, lastIndex)
-            lastIndex = subRegister.lastIndexOf(minScore)
-            list.add(lastIndex)
-        }
-        return list
+    init {
+        name = name.uppercase()
     }
 
-    fun getTurnMax(): List<Int> {
+    @IgnoredOnParcel
+    var minScore: Int = Int.MAX_VALUE
+    @IgnoredOnParcel
+    var maxScore: Int = Int.MIN_VALUE
+
+    fun getTurnMinScores(): List<Int> {
+        return getTurnMinOrMax(true)
+    }
+    fun getTurnMaxScores(): List<Int> {
+        return getTurnMinOrMax(false)
+    }
+
+    fun getTurnMinOrMax(getMinimum: Boolean): List<Int> {
+        val optScore = if (getMinimum) minScore else maxScore
         val list = mutableListOf<Int>()
-        var firstIndex = register.indexOf(maxScore)
-        var lastIndex = register.lastIndexOf(maxScore)
+        val firstIndex = register.indexOf(optScore)
+        var lastIndex = register.lastIndexOf(optScore)
         list.add(lastIndex)
         while (firstIndex != lastIndex) {
             val subRegister = register.subList(0, lastIndex)
-            lastIndex = subRegister.lastIndexOf(maxScore)
+            lastIndex = subRegister.lastIndexOf(optScore)
             list.add(lastIndex)
         }
         return list

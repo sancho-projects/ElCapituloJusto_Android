@@ -7,7 +7,6 @@ import android.media.AudioAttributes
 import android.media.SoundPool
 import android.net.Uri
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.widget.Button
 import android.widget.EditText
@@ -17,7 +16,6 @@ import android.widget.TextView
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
-import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
@@ -27,6 +25,9 @@ import es.sanchoo.capitulojusto.auxiliares.Player
 import es.sanchoo.capitulojusto.auxiliares.applyValueFilter
 import es.sanchoo.capitulojusto.menu.GameSettings
 import com.bumptech.glide.Glide
+import es.sanchoo.capitulojusto.auxiliares.Constants
+import es.sanchoo.capitulojusto.auxiliares.showBackConfirmationDialog
+import es.sanchoo.capitulojusto.auxiliares.showNotEnoughPlayersDialog
 
 
 class GameActivity : AppCompatActivity() {
@@ -59,35 +60,15 @@ class GameActivity : AppCompatActivity() {
 
         viewModel.showNotEnoughPanels.observe(this) { show ->
             if (show) {
-                AlertDialog.Builder(this)
-                    .setTitle(R.string.alert_not_panels_title)
-                    .setMessage(R.string.alert_not_panels_message)
-                    .setPositiveButton(R.string.alert_not_panels_accept) { dialog, _ ->
-                        dialog.dismiss()
-                        finish()
-                    }
-                    .show()
+                showNotEnoughPlayersDialog(this)
             }
         }
 
         onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
-                val builder = AlertDialog.Builder(this@GameActivity)
-                builder.setTitle(R.string.alert_close_title)
-                builder.setMessage(R.string.alert_close_message)
-                builder.setPositiveButton(R.string.alert_close_accept) { _, _ ->
-                    val intent = Intent(this@GameActivity, MainActivity::class.java)
-                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP)
-                    startActivity(intent)
-                    finish()
-                }
-                builder.setNegativeButton(R.string.alert_close_dismiss) { dialog, _ ->
-                    dialog.dismiss()
-                }
-                builder.show()
+                showBackConfirmationDialog(this@GameActivity)
             }
         })
-
 
         requestedOrientation = SCREEN_ORIENTATION_PORTRAIT
 
@@ -142,6 +123,8 @@ class GameActivity : AppCompatActivity() {
             if (shouldFinish) {
                 val intent = Intent(this, EndActivity::class.java)
                 val results = viewModel.getResults()
+
+                // Creo que tantos intents, y además Parcelables son malos para el rendimiento, habría que cambiarlos en el futuro
                 intent.putParcelableArrayListExtra(
                     "players",
                     ArrayList<Player>(viewModel.players)
@@ -151,16 +134,14 @@ class GameActivity : AppCompatActivity() {
                     ArrayList<Player>(results)
                 )
 
-
-                intent.putStringArrayListExtra("uriList",uriList)
-//                Log.d("registerFragment", "Orden de panels: $imageURLCache")
-//                Log.d("registerFragment", "Claves de uriStringMap: ${uriStringMap.keys}")
-
                 intent.putExtra("max_cap", GameSettings.max_cap)
                 intent.putExtra("easy", GameSettings.dificultad[0])
                 intent.putExtra("medium", GameSettings.dificultad[1])
                 intent.putExtra("hard", GameSettings.dificultad[2])
                 intent.putExtra("isManga", GameSettings.isManga)
+
+                intent.putStringArrayListExtra("uriList",uriList)
+
                 startActivity(intent)
                 finish()
             }
@@ -180,8 +161,6 @@ class GameActivity : AppCompatActivity() {
             soundIds[i] = sp.load(this, soundResIds[i], 1)
         }
     }
-
-
 
     fun onNextPressed(view: View){
 
@@ -204,7 +183,6 @@ class GameActivity : AppCompatActivity() {
      }
 
     private fun showFeedback() {
-        // val feedback: TextView = findViewById(R.id.textFeedback)
         val result: TextView = findViewById(R.id.textResult)
 
         val rightChapter: Int = viewModel.currentPanel!!.rightChapter
@@ -367,7 +345,6 @@ class GameActivity : AppCompatActivity() {
 
         val guessJ1: EditText = findViewById(R.id.guessTextJ1)
         if (guessJ1.visibility != View.INVISIBLE){
-
             chapters.add(getTextOf(guessJ1))
         }
         val guessJ2: EditText = findViewById(R.id.guessTextJ2)

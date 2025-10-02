@@ -8,4 +8,5 @@
     <color name="silver">#C0C0C0</color>
     <color name="bronze">#CD7F32</color>
     <color name="gray">#50FFFFFF</color>
+    <color name="bg_color">#FDF6D0</color>
 </resources>

@@ -1,27 +1,29 @@
 package es.sanchoo.capitulojusto.auxiliares
 
 import android.content.Context
-import android.content.res.Resources
 import android.util.Log
-import android.widget.Toast
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
 import java.io.BufferedReader
 import java.io.InputStreamReader
 
+//
+// Clase que uso para subir las imágenes y las soluciones a Firebase. Incluir en el MainActivity
+//
+
 class ImagesRepository {
 companion object{
     const val MAX_IMAGE = 45
 
-    fun subirImgstoFirestorage(context: Context, resources: Resources, packageName: String, isManga: Boolean = true) {
+    fun subirImgstoFirestorage(context: Context, packageName: String, isManga: Boolean = true) {
         val media = if (isManga) "manga" else "anime"
         val storage = FirebaseStorage.getInstance()
 
         for (i in 1..MAX_IMAGE) {
             val resourceName = "img$i"
-            val resId = resources.getIdentifier(resourceName, "raw", packageName)
+            val resId = context.resources.getIdentifier(resourceName, "raw", packageName)
             if (resId != 0) {
-                val inputStream = resources.openRawResource(resId)
+                val inputStream = context.resources.openRawResource(resId)
                 val storageRef = storage.reference.child("paneles/$media/$resourceName.jpg")
                 val uploadTask = storageRef.putStream(inputStream)
                 uploadTask.addOnFailureListener {
