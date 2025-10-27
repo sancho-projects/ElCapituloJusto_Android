@@ -16,6 +16,7 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
+import com.google.firebase.auth.FirebaseAuth
 import es.sanchoo.capitulojusto.auxiliares.showNoHighScoreDialog
 import es.sanchoo.capitulojusto.auxiliares.showNoInternetDialog
 import es.sanchoo.capitulojusto.menu.GameSettings
@@ -27,12 +28,22 @@ import es.sanchoo.capitulojusto.menu.ReglasFragment
 
 class MainActivity : AppCompatActivity() {
     lateinit var vpAdapter: VPAdapter
+    private lateinit var auth: FirebaseAuth
 
     @SuppressLint("SourceLockedOrientationActivity")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+
+        // Inicializar Firebase Auth
+        auth = FirebaseAuth.getInstance()
+
+        // Verificar si el usuario está autenticado
+        if (auth.currentUser == null) {
+            goToLoginActivity()
+            return
+        }
 
         if (!isNetworkAvailable()) {
             showNoInternetDialog(this)
@@ -61,6 +72,12 @@ class MainActivity : AppCompatActivity() {
             tab.text = vpAdapter.getTitle(position)
         }.attach()
 
+        // BOTÓN DE CERRAR SESIÓN
+        val logoutButton: Button = findViewById(R.id.logoutButton)
+        logoutButton.setOnClickListener {
+            auth.signOut()
+            goToLoginActivity()
+        }
 
         // COMENZAR A JUGAR
         val buttonStartGame: Button = findViewById(R.id.startButton)
@@ -98,6 +115,13 @@ class MainActivity : AppCompatActivity() {
         val network = connectivityManager.activeNetwork ?: return false
         val capabilities = connectivityManager.getNetworkCapabilities(network) ?: return false
         return capabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
+    }
+
+    private fun goToLoginActivity() {
+        val intent = Intent(this, LoginActivity::class.java)
+        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+        startActivity(intent)
+        finish()
     }
 
 }

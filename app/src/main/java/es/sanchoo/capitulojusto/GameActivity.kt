@@ -189,7 +189,7 @@ class GameActivity : AppCompatActivity() {
         result.text = getString(R.string.game_correct_answer, rightChapter)
 
         val soundIndex = viewModel.getSoundIndex()
-        sp.play(soundIds[soundIndex], 1f, 1f, 1, 0, 1f)
+        sp.play(soundIds[soundIndex], 0.5f, 0.5f, 1, 0, 1f)
 
     }
 

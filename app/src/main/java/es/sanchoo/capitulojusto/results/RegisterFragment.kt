@@ -37,12 +37,13 @@ class RegisterFragment : Fragment() {
 
         val players = arguments?.getParcelableArrayList<Player>("players") ?: arrayListOf()
         val uriList = arguments?.getStringArrayList("uriList")
+        val safeUriList = uriList ?: arrayListOf()
 
 
         val containerRecords = view.findViewById<LinearLayout>(R.id.containerRecords)
         containerRecords.removeAllViews()
 
-        for (i in 0 until minOf(Constants.MAX_TURNOS, uriList?.size!!)) {
+        for (i in 0 until minOf(Constants.MAX_TURNOS, safeUriList.size)) {
             // TURNO X
             val turnTitle = TextView(requireContext()).apply {
                 text = getString(R.string.end_register_turn, i + 1)
@@ -74,7 +75,7 @@ class RegisterFragment : Fragment() {
                 }
             }
 
-            val imagePath = uriList[i].toUri()
+            val imagePath = safeUriList[i].toUri()
             Glide.with(this)
                 .load(imagePath)
                 .placeholder(R.drawable.placeholder_loading)

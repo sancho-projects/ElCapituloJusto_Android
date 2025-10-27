@@ -3,6 +3,7 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
     <color name="red">#F44336</color>
+    <color name="red_dark">#611B15</color>
     <color name="wanted_text">#421f19</color>
     <color name="gold">#FFD700</color>
     <color name="silver">#C0C0C0</color>

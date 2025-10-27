@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name" translatable="false">Capítulo Justo</string>
-<!--    <string name="portraitText">Portrait</string>-->
-<!--    <string name="landscapeText">Landscape</string>-->
+    <string name="main_title">EL CAPÍTULO JUSTO</string>
+
     <string name="reglas_title">Reglas</string>
     <string name="reglas_titulo"><b><font color='#F44336'>Reglas del Juego</font></b></string>
 
@@ -21,6 +21,15 @@ Puedes ajustar la dificultad en <b>Ajustes</b>, pero si has mantenido la configu
     <string name="reglas_parrafo5">
 Minimiza tu puntuación, acierta lo más cerca posible del capítulo correcto y <b>compite para ser el mejor</b>.
     </string>
+
+
+    <!--    LoginActivity  -->
+    <string name="login">Iniciar Sesión</string>
+    <string name="login_logout">Cerrar Sesión</string>
+    <string name="login_register">Registrarse</string>
+    <string name="login_email_hint">Correo electrónico</string>
+    <string name="login_password_hint">Contraseña</string>
+    <string name="login_subtitle_1">¡Bienvenido! Esta autenticación sirve para llevar un control de los usuarios, <b>NO para registrar los resultados</b>. Si tienes dudas, consulta al desarrollador.</string>
 
     <!--    MainActivity  -->
     <string name="jugadores_title">Jugadores</string>

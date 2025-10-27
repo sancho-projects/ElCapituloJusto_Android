@@ -46,6 +46,8 @@ dependencies {
     implementation("com.google.firebase:firebase-analytics")
     implementation("com.google.firebase:firebase-firestore")
     implementation("com.google.firebase:firebase-storage")
+    implementation("com.google.firebase:firebase-auth")
+    implementation("com.google.firebase:firebase-config")
     implementation("com.github.bumptech.glide:glide:5.0.5")
     annotationProcessor("com.github.bumptech.glide:compiler:5.0.5")
 

@@ -15,6 +15,7 @@ import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
 import com.google.firebase.Firebase
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.Query
 import com.google.firebase.firestore.firestore
 import es.sanchoo.capitulojusto.R
@@ -24,7 +25,8 @@ import es.sanchoo.capitulojusto.auxiliares.Player
 data class HighScoreEntry(
     val name: String,
     val score: Int,
-    val medio: String
+    val medio: String,
+    val userId: String
 )
 
 class HighscoreFragment : Fragment() {
@@ -158,8 +160,11 @@ class HighscoreFragment : Fragment() {
     }
 
     fun updateHighScore(players: ArrayList<Player>?, medio: String) {
+        val auth = FirebaseAuth.getInstance()
+        val userId = auth.currentUser?.email ?: "anonimo"
+
         players?.forEach { player ->
-            val entry = HighScoreEntry(player.name, player.score, medio)
+            val entry = HighScoreEntry(player.name, player.score, medio, userId)
 
             db.collection(collection)
                 .add(entry)
