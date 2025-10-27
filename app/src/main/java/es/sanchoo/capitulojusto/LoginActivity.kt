@@ -90,27 +90,14 @@ class LoginActivity : AppCompatActivity() {
                     Log.d(TAG, "Remote Config actualizado exitosamente desde Firebase")
                     val valor = remoteConfig.getBoolean("sePermitenNuevosUsuarios")
                     Log.d(TAG, "Valor de sePermitenNuevosUsuarios: $valor")
-                    updateRegisterButtonState()
+                    registerButton.alpha = if (valor) 1.0f else 0.5f
                 } else {
                     Log.e(TAG, "Error al actualizar Remote Config: ${task.exception?.message}")
                     Log.d(TAG, "Usando valores por defecto")
-                    updateRegisterButtonState()
                 }
             }
     }
 
-    private fun updateRegisterButtonState() {
-        val sePermitenNuevosUsuarios = remoteConfig.getBoolean("sePermitenNuevosUsuarios")
-        Log.d(TAG, "updateRegisterButtonState - sePermitenNuevosUsuarios: $sePermitenNuevosUsuarios")
-        registerButton.isEnabled = sePermitenNuevosUsuarios
-        registerButton.alpha = if (sePermitenNuevosUsuarios) 1.0f else 0.5f
-
-        Toast.makeText(
-            this,
-            "Remote Config cargado: nuevos usuarios ${if (sePermitenNuevosUsuarios) "permitidos" else "NO permitidos"}",
-            Toast.LENGTH_SHORT
-        ).show()
-    }
 
     private fun loginUser() {
         val email = emailEditText.text.toString().trim()
